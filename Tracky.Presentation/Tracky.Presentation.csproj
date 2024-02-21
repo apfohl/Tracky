@@ -1,0 +1,13 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+    <PropertyGroup>
+        <TargetFramework>net8.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\Tracky.Application\Tracky.Application.csproj" />
+      <ProjectReference Include="..\Tracky.Infrastructure\Tracky.Infrastructure.csproj" />
+    </ItemGroup>
+
+</Project>
