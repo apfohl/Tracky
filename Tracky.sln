@@ -6,7 +6,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tracky.Infrastructure", "Tr
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tracky.Application", "Tracky.Application\Tracky.Application.csproj", "{4F38F218-764D-4252-8C1F-AA9A47B8BDA8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tracky.Presentation", "Tracky.Presentation\Tracky.Presentation.csproj", "{FC492214-D81F-44A7-9B37-136FFB1B37F1}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tracky.Presentation", "Tracky.Presentation\Tracky.Presentation.csproj", "{8EFC45EC-B94E-44A8-8554-1CDAE937E1E0}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -26,9 +26,9 @@ Global
 		{4F38F218-764D-4252-8C1F-AA9A47B8BDA8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4F38F218-764D-4252-8C1F-AA9A47B8BDA8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4F38F218-764D-4252-8C1F-AA9A47B8BDA8}.Release|Any CPU.Build.0 = Release|Any CPU
-		{FC492214-D81F-44A7-9B37-136FFB1B37F1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{FC492214-D81F-44A7-9B37-136FFB1B37F1}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{FC492214-D81F-44A7-9B37-136FFB1B37F1}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{FC492214-D81F-44A7-9B37-136FFB1B37F1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8EFC45EC-B94E-44A8-8554-1CDAE937E1E0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8EFC45EC-B94E-44A8-8554-1CDAE937E1E0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8EFC45EC-B94E-44A8-8554-1CDAE937E1E0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8EFC45EC-B94E-44A8-8554-1CDAE937E1E0}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

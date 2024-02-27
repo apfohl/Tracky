@@ -1,0 +1,42 @@
+version: "3.8"
+
+services:
+  tracky:
+    build:
+      context: .
+      dockerfile: Tracky.Presentation/Dockerfile
+    restart: unless-stopped
+    logging:
+      options:
+        max-size: "8m"
+        max-file: "10"
+    depends_on:
+      - eventstore
+      - mongo
+
+  mongo:
+    image: mongo
+    restart: unless-stopped
+    logging:
+      options:
+        max-size: "8m"
+        max-file: "10"
+    volumes:
+      - mongo:/data/db
+
+  eventstore:
+    image: eventstore/eventstore
+    command: --insecure
+    restart: unless-stopped
+    logging:
+      options:
+        max-size: "8m"
+        max-file: "10"
+    volumes:
+      - eventstore-data:/var/lib/eventstore
+      - eventstore-logs:/var/log/eventstore
+
+volumes:
+  mongo:
+  eventstore-data:
+  eventstore-logs:
