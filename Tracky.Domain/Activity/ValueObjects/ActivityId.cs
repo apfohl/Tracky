@@ -2,7 +2,7 @@ using Tracky.Domain.Common;
 
 namespace Tracky.Domain.Activity.ValueObjects;
 
-public sealed record ActivityId(Guid Value) : AggregateRootId<Guid>(Value)
+public sealed record ActivityId(Guid Value) : EntityId<Guid>(Value)
 {
     public static ActivityId CreateUnique() => new(Guid.NewGuid());
 

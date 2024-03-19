@@ -1,8 +1,6 @@
-using MediatR;
-
 namespace Tracky.Domain.Common;
 
-public interface IDomainEvent : INotification
+public interface IDomainEvent
 {
     DateTime OccurredOn { get; }
 }
