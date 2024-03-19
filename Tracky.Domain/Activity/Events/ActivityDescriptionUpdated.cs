@@ -3,7 +3,4 @@ using Tracky.Domain.Common;
 
 namespace Tracky.Domain.Activity.Events;
 
-public record ActivityDescriptionUpdated(Description Description) : IDomainEvent
-{
-    public DateTime OccurredOn { get; } = DateTime.Now;
-}
+public record ActivityDescriptionUpdated(Description Description) : DomainEvent;
