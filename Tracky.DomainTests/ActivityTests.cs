@@ -1,56 +1,102 @@
 using Tracky.Domain.Activity;
+using Tracky.Domain.Activity.Enums;
 using Tracky.Domain.Activity.Events;
 using Tracky.Domain.Activity.ValueObjects;
+using Tracky.Domain.Common;
 
 namespace Tracky.DomainTests;
 
 public static class ActivityTests
 {
     [Test]
-    public static void ActivityCreated_creates_activity()
+    public static Task Start_creates_started_activity()
     {
-        var description = new Description("Test Description");
-        var activity = Activity.Create(description);
+        const string description = "Test Description";
+        var activity = Activity.Start(description);
 
         activity.Description.Should().Be(description);
-        activity.UncommittedEvents.Should().ContainSingle(e => e is ActivityCreated);
+        activity.State.Should().Be(ActivityState.Started);
+
+        return activity.Persist((id, events) =>
+        {
+            id.Should().Be(activity.Id);
+
+            var eventsList = events.ToList();
+            eventsList.Should().HaveCount(1);
+            eventsList.Should().ContainSingle(e => e is ActivityStarted);
+
+            return Task.CompletedTask;
+        });
     }
 
     [Test]
-    public static void ApplyDomainEvent_applies_event()
+    public static Task Materialize_creates_an_activity_from_an_event_list()
     {
-        var activity = Activity.Create(new Description("Test Description"));
+        var id = ActivityId.CreateUnique();
+        var events = new List<DomainEvent>
+        {
+            new ActivityStarted("Test Description"),
+            new ActivityDescriptionChanged("New Description")
+        };
 
-        activity.ApplyDomainEvent(new ActivityDescriptionUpdated(new Description("New Description")));
+        var activity = Activity.Materialize(id, events);
 
-        activity.UncommittedEvents.Should().HaveCount(2);
-        activity.UncommittedEvents.Should().ContainSingle(e => e is ActivityCreated);
-        activity.UncommittedEvents.Should().ContainSingle(e => e is ActivityDescriptionUpdated);
+        activity.Id.Should().Be(id);
+        activity.Description.Should().Be("New Description");
+        activity.State.Should().Be(ActivityState.Started);
+
+        return activity.Persist((i, ev) =>
+        {
+            i.Should().Be(activity.Id);
+
+            var eventsList = ev.ToList();
+            eventsList.Should().HaveCount(2);
+            eventsList.Should().ContainSingle(e => e is ActivityStarted);
+            eventsList.Should().ContainSingle(e => e is ActivityDescriptionChanged);
+
+            return Task.CompletedTask;
+        });
     }
 
     [Test]
-    public static void ClearDomainEvents_clears_uncommitted_events()
+    public static Task ChangeDescription_attaches_event_for_changing_description()
     {
-        var activity = Activity.Create(new Description("Test Description"));
+        var activity = Activity.Start("Test Description");
 
-        activity.ClearDomainEvents();
+        activity.ChangeDescription("New Description");
 
-        activity.UncommittedEvents.Should().BeEmpty();
+        activity.Description.Should().Be("New Description");
+
+        return activity.Persist((id, events) =>
+        {
+            id.Should().Be(activity.Id);
+
+            var eventsList = events.ToList();
+            eventsList.Should().HaveCount(2);
+            eventsList.Should().ContainSingle(e => e is ActivityStarted);
+            eventsList.Should().ContainSingle(e => e is ActivityDescriptionChanged);
+
+            return Task.CompletedTask;
+        });
     }
 
     [Test]
-    public static void ActivityDescriptionUpdated_updates_description()
+    public static void Pause_attaches_event_for_pausing_activity()
     {
-        var activity = Activity.Create(new Description("Test Description"));
-        var newDescription = new Description("New Description");
-        var activityDescriptionUpdated = new ActivityDescriptionUpdated(newDescription);
+        var activity = Activity.Start("Test Description");
 
-        activity.ClearDomainEvents();
+        activity.Pause();
 
-        activity.ApplyDomainEvent(activityDescriptionUpdated);
+        activity.State.Should().Be(ActivityState.Paused);
+    }
 
-        activity.Description.Should().Be(newDescription);
-        activity.UncommittedEvents.Should().HaveCount(1);
-        activity.UncommittedEvents.Should().ContainSingle(e => e is ActivityDescriptionUpdated);
+    [Test]
+    public static void End_attaches_event_for_ending_activity()
+    {
+        var activity = Activity.Start("Test Description");
+
+        activity.End();
+
+        activity.State.Should().Be(ActivityState.Ended);
     }
 }

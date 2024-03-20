@@ -6,11 +6,11 @@ public abstract record Entity<TId, TIdType> where TId : EntityId<TIdType>
 
     public TId Id { get; protected init; }
 
-    public IEnumerable<DomainEvent> UncommittedEvents => uncommittedEvents.AsReadOnly();
+    protected IEnumerable<DomainEvent> UncommittedEvents => uncommittedEvents.AsReadOnly();
 
-    public void ClearDomainEvents() => uncommittedEvents.Clear();
+    protected void ClearDomainEvents() => uncommittedEvents.Clear();
 
-    public void ApplyDomainEvent(DomainEvent domainEvent)
+    protected void ApplyDomainEvent(DomainEvent domainEvent)
     {
         ((dynamic)this).Apply((dynamic)domainEvent);
 
