@@ -1,3 +1,4 @@
+using JetBrains.Annotations;
 using Tracky.Domain.Activity.Enums;
 using Tracky.Domain.Activity.Events;
 using Tracky.Domain.Activity.ValueObjects;
@@ -32,21 +33,26 @@ public sealed record Activity : AggregateRoot<ActivityId, Guid>
     public static Activity Start(string description) =>
         new(ActivityId.CreateUnique(), new[] { new ActivityStarted(description) });
 
+    [UsedImplicitly]
     internal void Apply(ActivityStarted @event)
     {
         Description = @event.Description;
         State = ActivityState.Running;
     }
 
+    [UsedImplicitly]
     internal void Apply(ActivityDescriptionChanged @event) =>
         Description = @event.Description;
 
+    [UsedImplicitly]
     internal void Apply(ActivityPaused _) =>
         State = ActivityState.Paused;
 
+    [UsedImplicitly]
     internal void Apply(ActivityResumed _) =>
         State = ActivityState.Running;
 
+    [UsedImplicitly]
     internal void Apply(ActivityEnded _) =>
         State = ActivityState.Ended;
 }
