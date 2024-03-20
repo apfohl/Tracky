@@ -17,9 +17,10 @@ public static class ActivityTests
         activity.Description.Should().Be(description);
         activity.State.Should().Be(ActivityState.Started);
 
-        return activity.Persist((id, events) =>
+        return activity.Commit((id, version, events) =>
         {
             id.Should().Be(activity.Id);
+            version.Should().Be(1);
 
             var eventsList = events.ToList();
             eventsList.Should().HaveCount(1);
@@ -45,9 +46,10 @@ public static class ActivityTests
         activity.Description.Should().Be("New Description");
         activity.State.Should().Be(ActivityState.Started);
 
-        return activity.Persist((i, ev) =>
+        return activity.Commit((i, v, ev) =>
         {
             i.Should().Be(activity.Id);
+            v.Should().Be(2);
 
             var eventsList = ev.ToList();
             eventsList.Should().HaveCount(2);
@@ -67,9 +69,10 @@ public static class ActivityTests
 
         activity.Description.Should().Be("New Description");
 
-        return activity.Persist((id, events) =>
+        return activity.Commit((id, version, events) =>
         {
             id.Should().Be(activity.Id);
+            version.Should().Be(1);
 
             var eventsList = events.ToList();
             eventsList.Should().HaveCount(2);

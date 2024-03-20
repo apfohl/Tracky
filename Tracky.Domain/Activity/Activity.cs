@@ -10,12 +10,8 @@ public sealed record Activity : AggregateRoot<ActivityId, Guid>
     public string Description { get; private set; }
     public ActivityState State { get; private set; }
 
-    private Activity(ActivityId id, IEnumerable<DomainEvent> events) : base(id)
+    private Activity(ActivityId id, IEnumerable<DomainEvent> events) : base(id, events)
     {
-        foreach (var @event in events)
-        {
-            ApplyDomainEvent(@event);
-        }
     }
 
     public void ChangeDescription(string description) =>
