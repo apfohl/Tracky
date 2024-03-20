@@ -20,6 +20,9 @@ public sealed record Activity : AggregateRoot<ActivityId, Guid>
     public void Pause() =>
         ApplyDomainEvent(new ActivityPaused());
 
+    public void Resume() =>
+        ApplyDomainEvent(new ActivityResumed());
+
     public void End() =>
         ApplyDomainEvent(new ActivityEnded());
 
@@ -32,7 +35,7 @@ public sealed record Activity : AggregateRoot<ActivityId, Guid>
     internal void Apply(ActivityStarted @event)
     {
         Description = @event.Description;
-        State = ActivityState.Started;
+        State = ActivityState.Running;
     }
 
     internal void Apply(ActivityDescriptionChanged @event) =>
@@ -40,6 +43,9 @@ public sealed record Activity : AggregateRoot<ActivityId, Guid>
 
     internal void Apply(ActivityPaused _) =>
         State = ActivityState.Paused;
+
+    internal void Apply(ActivityResumed _) =>
+        State = ActivityState.Running;
 
     internal void Apply(ActivityEnded _) =>
         State = ActivityState.Ended;

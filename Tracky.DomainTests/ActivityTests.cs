@@ -15,7 +15,7 @@ public static class ActivityTests
         var activity = Activity.Start(description);
 
         activity.Description.Should().Be(description);
-        activity.State.Should().Be(ActivityState.Started);
+        activity.State.Should().Be(ActivityState.Running);
 
         return activity.Commit((id, version, events) =>
         {
@@ -44,7 +44,7 @@ public static class ActivityTests
 
         activity.Id.Should().Be(id);
         activity.Description.Should().Be("New Description");
-        activity.State.Should().Be(ActivityState.Started);
+        activity.State.Should().Be(ActivityState.Running);
 
         return activity.Commit((i, v, ev) =>
         {
@@ -91,6 +91,17 @@ public static class ActivityTests
         activity.Pause();
 
         activity.State.Should().Be(ActivityState.Paused);
+    }
+
+    [Test]
+    public static void Resume_attaches_event_for_resuming_activity()
+    {
+        var activity = Activity.Start("Test Description");
+
+        activity.Pause();
+        activity.Resume();
+
+        activity.State.Should().Be(ActivityState.Running);
     }
 
     [Test]

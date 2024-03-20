@@ -1,4 +1,5 @@
 ﻿<wpf:ResourceDictionary xml:space="preserve" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:s="clr-namespace:System;assembly=mscorlib" xmlns:ss="urn:shemas-jetbrains-com:settings-storage-xaml" xmlns:wpf="http://schemas.microsoft.com/winfx/2006/xaml/presentation">
+	<s:String x:Key="/Default/Environment/Highlighting/HighlightingSourceSnapshotLocation/@EntryValue">/home/andreas/.cache/JetBrains/Rider2023.3/resharper-host/temp/Rider/vAny/CoverageData/_Tracky.35750651/Snapshot/snapshot.utdcvr</s:String>
 	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=fc037dd3_002Df1ee_002D4a58_002D85c1_002D6756d13ad753/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" IsActive="True" Name="ActivityCreated_creates_activity" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;
   &lt;TestAncestor&gt;
     &lt;TestId&gt;NUnit3x::124975DC-5B8C-452D-8C31-79083D6183B3::net8.0::Tracky.DomainTests.ActivityTests&lt;/TestId&gt;
