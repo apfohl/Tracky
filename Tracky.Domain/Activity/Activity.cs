@@ -11,7 +11,7 @@ public sealed record Activity : AggregateRoot<ActivityId, Guid>
     public string Description { get; private set; }
     public ActivityState State { get; private set; }
 
-    private Activity(ActivityId id, IEnumerable<DomainEvent> events) : base(id, events)
+    public Activity(ActivityId id, IEnumerable<DomainEvent> events) : base(id, events)
     {
     }
 
@@ -26,9 +26,6 @@ public sealed record Activity : AggregateRoot<ActivityId, Guid>
 
     public void End() =>
         ApplyDomainEvent(new ActivityEnded());
-
-    public static Activity Materialize(ActivityId id, IEnumerable<DomainEvent> events) =>
-        new(id, events);
 
     public static Activity Start(string description) =>
         new(ActivityId.CreateUnique(), new[] { new ActivityStarted(description) });

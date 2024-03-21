@@ -40,7 +40,7 @@ public static class ActivityTests
             new ActivityDescriptionChanged("New Description")
         };
 
-        var activity = Activity.Materialize(id, events);
+        var activity = new Activity(id, events);
 
         activity.Id.Should().Be(id);
         activity.Description.Should().Be("New Description");
