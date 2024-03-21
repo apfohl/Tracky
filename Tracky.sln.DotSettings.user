@@ -4,5 +4,8 @@
 	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=fc037dd3_002Df1ee_002D4a58_002D85c1_002D6756d13ad753/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" IsActive="True" Name="ActivityCreated_creates_activity" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;
   &lt;TestAncestor&gt;
     &lt;TestId&gt;NUnit3x::124975DC-5B8C-452D-8C31-79083D6183B3::net8.0::Tracky.DomainTests.ActivityTests&lt;/TestId&gt;
+    &lt;TestId&gt;NUnit3x::124975DC-5B8C-452D-8C31-79083D6183B3::net8.0::Tracky.DomainTests.ResultTests.Map_with_successful_result_returns_result_with_new_value&lt;/TestId&gt;
+    &lt;TestId&gt;NUnit3x::124975DC-5B8C-452D-8C31-79083D6183B3::net8.0::Tracky.DomainTests.ResultTests.Bind_with_successful_result_returns_result_with_new_value&lt;/TestId&gt;
+    &lt;TestId&gt;NUnit3x::124975DC-5B8C-452D-8C31-79083D6183B3::net8.0::Tracky.DomainTests.ResultTests&lt;/TestId&gt;
   &lt;/TestAncestor&gt;
 &lt;/SessionState&gt;</s:String></wpf:ResourceDictionary>
