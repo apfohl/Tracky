@@ -65,7 +65,7 @@ public static class ActivityTests
     {
         var activity = Activity.Start("Test Description");
 
-        activity.ChangeDescription("New Description");
+        activity.ChangeDescription("New Description").Switch(_ => { }, error => Assert.Fail(error.ToString()));
 
         activity.Description.Should().Be("New Description");
 
@@ -88,7 +88,7 @@ public static class ActivityTests
     {
         var activity = Activity.Start("Test Description");
 
-        activity.Pause();
+        activity.Pause().Switch(_ => { }, error => Assert.Fail(error.ToString()));
 
         activity.State.Should().Be(ActivityState.Paused);
     }
@@ -98,8 +98,8 @@ public static class ActivityTests
     {
         var activity = Activity.Start("Test Description");
 
-        activity.Pause();
-        activity.Resume();
+        activity.Pause().Switch(_ => { }, error => Assert.Fail(error.ToString()));
+        activity.Resume().Switch(_ => { }, error => Assert.Fail(error.ToString()));
 
         activity.State.Should().Be(ActivityState.Running);
     }
@@ -109,7 +109,7 @@ public static class ActivityTests
     {
         var activity = Activity.Start("Test Description");
 
-        activity.End();
+        activity.End().Switch(_ => { }, error => Assert.Fail(error.ToString()));
 
         activity.State.Should().Be(ActivityState.Ended);
     }

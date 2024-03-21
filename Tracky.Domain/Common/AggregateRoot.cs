@@ -1,3 +1,5 @@
+using System.Reactive;
+
 namespace Tracky.Domain.Common;
 
 public abstract record AggregateRoot<TId, TIdType> : Entity<TId> where TId : AggregateRootId<TIdType>
@@ -22,9 +24,14 @@ public abstract record AggregateRoot<TId, TIdType> : Entity<TId> where TId : Agg
         uncommittedEvents.Clear();
     }
 
-    protected void ApplyDomainEvent(DomainEvent domainEvent)
+    protected Result<Unit> ApplyDomainEvent(DomainEvent domainEvent)
     {
-        ((dynamic)this).Apply((dynamic)domainEvent);
-        uncommittedEvents.Add(domainEvent);
+        Result<Unit> result = ((dynamic)this).Apply((dynamic)domainEvent);
+
+        result.Switch(
+            _ => uncommittedEvents.Add(domainEvent),
+            _ => { });
+
+        return result;
     }
 }
