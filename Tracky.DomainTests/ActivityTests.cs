@@ -1,5 +1,6 @@
 using Tracky.Domain.Activity;
 using Tracky.Domain.Activity.Enums;
+using Tracky.Domain.Activity.Errors;
 using Tracky.Domain.Activity.Events;
 using Tracky.Domain.Activity.ValueObjects;
 using Tracky.Domain.Common;
@@ -112,5 +113,23 @@ public static class ActivityTests
         activity.End().Switch(_ => { }, error => Assert.Fail(error.ToString()));
 
         activity.State.Should().Be(ActivityState.Ended);
+    }
+
+    [Test]
+    public static void Resume_returns_error_when_activity_has_already_ended()
+    {
+        var activity = Activity.Start("Test Description");
+        activity.End().Switch(_ => { }, error => Assert.Fail(error.ToString()));
+
+        activity.Resume().Switch(_ => Assert.Fail(), error => error.Should().BeOfType<ActivityAlreadyEnded>());
+    }
+
+    [Test]
+    public static void Pause_returns_error_when_activity_has_already_ended()
+    {
+        var activity = Activity.Start("Test Description");
+        activity.End().Switch(_ => { }, error => Assert.Fail(error.ToString()));
+
+        activity.Pause().Switch(_ => Assert.Fail(), error => error.Should().BeOfType<ActivityAlreadyEnded>());
     }
 }

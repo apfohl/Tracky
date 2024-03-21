@@ -43,10 +43,12 @@ public sealed record Activity : AggregateRoot<ActivityId, Guid>
                 return new ActivityAlreadyEnded();
             case nameof(ActivityState.Paused):
                 return new ActivityAlreadyStarted();
-            default:
+            case nameof(ActivityState.Created):
                 Description = @event.Description;
                 State = ActivityState.Running;
                 return Unit.Default;
+            default:
+                throw new ArgumentException(nameof(State.Name));
         }
     }
 
