@@ -38,20 +38,20 @@ public sealed record Activity : AggregateRoot<ActivityId, Guid>
     [UsedImplicitly]
     internal Result<Unit> Apply(ActivityStarted @event)
     {
-        switch (State.Name)
+        switch (State)
         {
-            case nameof(ActivityState.Running):
+            case ActivityState.Running:
                 return new ActivityAlreadyStarted();
-            case nameof(ActivityState.Ended):
+            case ActivityState.Ended:
                 return new ActivityAlreadyEnded();
-            case nameof(ActivityState.Paused):
+            case ActivityState.Paused:
                 return new ActivityAlreadyStarted();
-            case nameof(ActivityState.Created):
+            case ActivityState.Created:
                 Description = @event.Description;
                 State = ActivityState.Running;
                 return Unit.Default;
             default:
-                throw new ArgumentException(nameof(State.Name));
+                throw new ArgumentException(nameof(State));
         }
     }
 
@@ -65,52 +65,52 @@ public sealed record Activity : AggregateRoot<ActivityId, Guid>
     [UsedImplicitly]
     internal Result<Unit> Apply(ActivityPaused _)
     {
-        switch (State.Name)
+        switch (State)
         {
-            case nameof(ActivityState.Running):
+            case ActivityState.Running:
                 State = ActivityState.Paused;
                 return Unit.Default;
-            case nameof(ActivityState.Ended):
+            case ActivityState.Ended:
                 return new ActivityAlreadyEnded();
-            case nameof(ActivityState.Paused):
+            case ActivityState.Paused:
                 return Unit.Default;
             default:
-                throw new ArgumentException(nameof(State.Name));
+                throw new ArgumentException(nameof(State));
         }
     }
 
     [UsedImplicitly]
     internal Result<Unit> Apply(ActivityResumed _)
     {
-        switch (State.Name)
+        switch (State)
         {
-            case nameof(ActivityState.Running):
+            case ActivityState.Running:
                 return Unit.Default;
-            case nameof(ActivityState.Ended):
+            case ActivityState.Ended:
                 return new ActivityAlreadyEnded();
-            case nameof(ActivityState.Paused):
+            case ActivityState.Paused:
                 State = ActivityState.Running;
                 return Unit.Default;
             default:
-                throw new ArgumentException(nameof(State.Name));
+                throw new ArgumentException(nameof(State));
         }
     }
 
     [UsedImplicitly]
     internal Result<Unit> Apply(ActivityEnded _)
     {
-        switch (State.Name)
+        switch (State)
         {
-            case nameof(ActivityState.Running):
+            case ActivityState.Running:
                 State = ActivityState.Ended;
                 return Unit.Default;
-            case nameof(ActivityState.Ended):
+            case ActivityState.Ended:
                 return Unit.Default;
-            case nameof(ActivityState.Paused):
+            case ActivityState.Paused:
                 State = ActivityState.Ended;
                 return Unit.Default;
             default:
-                throw new ArgumentException(nameof(State.Name));
+                throw new ArgumentException(nameof(State));
         }
     }
 }

@@ -6,7 +6,6 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <PackageReference Include="Ardalis.SmartEnum" Version="8.0.0" />
       <PackageReference Include="JetBrains.Annotations" Version="2023.3.0" />
       <PackageReference Include="OneOf" Version="3.0.263" />
       <PackageReference Include="OneOf.SourceGenerator" Version="3.0.263" />
