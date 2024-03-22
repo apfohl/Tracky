@@ -17,6 +17,9 @@ public sealed record Activity : AggregateRoot<ActivityId, Guid>
     {
     }
 
+    public Result<Unit> Start(string description) =>
+        ApplyDomainEvent(new ActivityStarted(description));
+
     public Result<Unit> ChangeDescription(string description) =>
         ApplyDomainEvent(new ActivityDescriptionChanged(description));
 
@@ -29,8 +32,8 @@ public sealed record Activity : AggregateRoot<ActivityId, Guid>
     public Result<Unit> End() =>
         ApplyDomainEvent(new ActivityEnded());
 
-    public static Activity Start(string description) =>
-        new(ActivityId.CreateUnique(), new[] { new ActivityStarted(description) });
+    public static Activity Create() =>
+        new(ActivityId.CreateUnique(), Array.Empty<DomainEvent>());
 
     [UsedImplicitly]
     internal Result<Unit> Apply(ActivityStarted @event)
