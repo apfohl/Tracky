@@ -100,4 +100,52 @@ public static class ResultTests
                 _ => Assert.Fail(),
                 error => error.Should().BeOfType<TestError>()));
     }
+
+    [Test]
+    public static async Task BindAsync_success_result_with_async_mapping_returns_success_result_task()
+    {
+        Result<int> result = 42;
+
+        await result.BindAsync(value => Task.FromResult<Result<string>>(value.ToString()))
+            .ContinueWith(task => task.Result.Switch(
+                value => value.Should().Be("42"),
+                _ => Assert.Fail()
+            ));
+    }
+
+    [Test]
+    public static async Task BindAsync_success_result_task_with_mapping_returns_success_result_task()
+    {
+        var result = Task.FromResult<Result<int>>(42);
+
+        await result.BindAsync(value => (Result<string>)value.ToString())
+            .ContinueWith(task => task.Result.Switch(
+                value => value.Should().Be("42"),
+                _ => Assert.Fail()
+            ));
+    }
+
+    [Test]
+    public static async Task BindAsync_success_result_task_with_async_mapping_returns_success_result_task()
+    {
+        var result = Task.FromResult<Result<int>>(42);
+
+        await result.BindAsync(value => Task.FromResult<Result<string>>(value.ToString()))
+            .ContinueWith(task => task.Result.Switch(
+                value => value.Should().Be("42"),
+                _ => Assert.Fail()
+            ));
+    }
+
+    [Test]
+    public static void BindAsync_with_failed_result_returns_result_with_error()
+    {
+        Result<int> result = new TestError();
+
+        result
+            .BindAsync(value => Task.FromResult<Result<string>>(value.ToString()))
+            .ContinueWith(task => task.Result.Switch(
+                _ => Assert.Fail(),
+                error => error.Should().BeOfType<TestError>()));
+    }
 }
