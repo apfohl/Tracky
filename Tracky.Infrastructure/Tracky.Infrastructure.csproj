@@ -9,8 +9,4 @@
       <ProjectReference Include="..\Tracky.Application\Tracky.Application.csproj" />
     </ItemGroup>
 
-    <ItemGroup>
-      <Folder Include="EventStore\" />
-    </ItemGroup>
-
 </Project>

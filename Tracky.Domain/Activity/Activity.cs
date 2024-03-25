@@ -13,12 +13,12 @@ public sealed record Activity : AggregateRoot<ActivityId, Guid>
     public string Description { get; private set; }
     public ActivityState State { get; private set; } = ActivityState.Created;
 
-    public Activity(ActivityId id, IEnumerable<DomainEvent> events) : base(id, events)
+    public Activity(ActivityId id, IEnumerable<DomainEvent<ActivityId, Guid>> events) : base(id, events)
     {
     }
 
     public static Activity Create() =>
-        new(ActivityId.CreateUnique(), Array.Empty<DomainEvent>());
+        new(ActivityId.CreateUnique(), Array.Empty<DomainEvent<ActivityId, Guid>>());
 
     public Result<Activity> Start(string description) =>
         ApplyDomainEvent(new ActivityStarted(Id, description)).Map(_ => this);

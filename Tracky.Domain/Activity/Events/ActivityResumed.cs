@@ -3,4 +3,4 @@ using Tracky.Domain.Common;
 
 namespace Tracky.Domain.Activity.Events;
 
-public sealed record ActivityResumed(ActivityId ActivityId) : DomainEvent;
+public sealed record ActivityResumed(ActivityId ActivityId) : DomainEvent<ActivityId, Guid>(ActivityId);
