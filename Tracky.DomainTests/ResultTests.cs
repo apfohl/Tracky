@@ -7,6 +7,17 @@ internal sealed record TestError : Error;
 public static class ResultTests
 {
     [Test]
+    public static void ToResult_with_value_returns_successful_result()
+    {
+        var result = "Test".ToResult();
+
+        result.Switch(
+            value => value.Should().Be("Test"),
+            _ => Assert.Fail()
+        );
+    }
+
+    [Test]
     public static void Map_with_successful_result_returns_result_with_new_value()
     {
         const int value = 42;
