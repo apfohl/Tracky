@@ -39,8 +39,8 @@ public static class ActivityTests
         var id = ActivityId.CreateUnique();
         var events = new List<DomainEvent>
         {
-            new ActivityStarted("Test Description"),
-            new ActivityDescriptionChanged("New Description")
+            new ActivityStarted(id, "Test Description"),
+            new ActivityDescriptionChanged(id, "New Description")
         };
 
         var activity = new Activity(id, events);
@@ -128,7 +128,9 @@ public static class ActivityTests
         activity.Start("Test Description").Switch(_ => { }, error => Assert.Fail(error.ToString()));
         activity.End().Switch(_ => { }, error => Assert.Fail(error.ToString()));
 
-        activity.Resume().Switch(_ => Assert.Fail(), error => error.Should().BeOfType<ActivityAlreadyEnded>());
+        activity.Resume().Switch(
+            _ => Assert.Fail("Activity should not be resumed!"),
+            error => error.Should().BeOfType<ActivityAlreadyEnded>());
     }
 
     [Test]
@@ -138,6 +140,8 @@ public static class ActivityTests
         activity.Start("Test Description").Switch(_ => { }, error => Assert.Fail(error.ToString()));
         activity.End().Switch(_ => { }, error => Assert.Fail(error.ToString()));
 
-        activity.Pause().Switch(_ => Assert.Fail(), error => error.Should().BeOfType<ActivityAlreadyEnded>());
+        activity.Pause().Switch(
+            _ => Assert.Fail("Activity should not be paused!"),
+            error => error.Should().BeOfType<ActivityAlreadyEnded>());
     }
 }

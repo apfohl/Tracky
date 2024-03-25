@@ -3,10 +3,14 @@ using OneOf;
 namespace Tracky.Domain.Common;
 
 [GenerateOneOf]
-public partial class Result<T> : OneOfBase<T, DomainError>;
+public partial class Result<T> : OneOfBase<T, Error>;
 
 public static class ResultExtensions
 {
+    public static Result<T> ToResult<T>(this T value) => value;
+
+    public static Result<T> ToResult<T>(this Error error) => error;
+
     public static Result<TResult> Map<T, TResult>(this Result<T> result, Func<T, TResult> mapping) =>
         result.Match<Result<TResult>>(
             value => mapping(value),

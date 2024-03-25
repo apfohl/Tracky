@@ -1,4 +1,4 @@
-using System.Reactive;
+using MediatR;
 
 namespace Tracky.Domain.Common;
 

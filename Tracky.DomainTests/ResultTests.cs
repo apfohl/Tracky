@@ -2,7 +2,7 @@ using Tracky.Domain.Common;
 
 namespace Tracky.DomainTests;
 
-internal sealed record TestError : DomainError;
+internal sealed record TestError : Error;
 
 public static class ResultTests
 {

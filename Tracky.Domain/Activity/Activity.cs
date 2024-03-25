@@ -1,5 +1,5 @@
-using System.Reactive;
 using JetBrains.Annotations;
+using MediatR;
 using Tracky.Domain.Activity.Enums;
 using Tracky.Domain.Activity.Errors;
 using Tracky.Domain.Activity.Events;
@@ -17,23 +17,20 @@ public sealed record Activity : AggregateRoot<ActivityId, Guid>
     {
     }
 
-    public Result<Unit> Start(string description) =>
-        ApplyDomainEvent(new ActivityStarted(description));
-
-    public Result<Unit> ChangeDescription(string description) =>
-        ApplyDomainEvent(new ActivityDescriptionChanged(description));
-
-    public Result<Unit> Pause() =>
-        ApplyDomainEvent(new ActivityPaused());
-
-    public Result<Unit> Resume() =>
-        ApplyDomainEvent(new ActivityResumed());
-
-    public Result<Unit> End() =>
-        ApplyDomainEvent(new ActivityEnded());
-
     public static Activity Create() =>
         new(ActivityId.CreateUnique(), Array.Empty<DomainEvent>());
+
+    public Result<Activity> Start(string description) =>
+        ApplyDomainEvent(new ActivityStarted(Id, description)).Map(_ => this);
+
+    public Result<Activity> ChangeDescription(string description) =>
+        ApplyDomainEvent(new ActivityDescriptionChanged(Id, description)).Map(_ => this);
+
+    public Result<Activity> Pause() => ApplyDomainEvent(new ActivityPaused(Id)).Map(_ => this);
+
+    public Result<Activity> Resume() => ApplyDomainEvent(new ActivityResumed(Id)).Map(_ => this);
+
+    public Result<Activity> End() => ApplyDomainEvent(new ActivityEnded(Id)).Map(_ => this);
 
     [UsedImplicitly]
     internal Result<Unit> Apply(ActivityStarted @event)
@@ -49,7 +46,7 @@ public sealed record Activity : AggregateRoot<ActivityId, Guid>
             case ActivityState.Created:
                 Description = @event.Description;
                 State = ActivityState.Running;
-                return Unit.Default;
+                return Unit.Value;
             default:
                 throw new ArgumentException(nameof(State));
         }
@@ -59,7 +56,7 @@ public sealed record Activity : AggregateRoot<ActivityId, Guid>
     internal Result<Unit> Apply(ActivityDescriptionChanged @event)
     {
         Description = @event.Description;
-        return Unit.Default;
+        return Unit.Value;
     }
 
     [UsedImplicitly]
@@ -69,11 +66,11 @@ public sealed record Activity : AggregateRoot<ActivityId, Guid>
         {
             case ActivityState.Running:
                 State = ActivityState.Paused;
-                return Unit.Default;
+                return Unit.Value;
             case ActivityState.Ended:
                 return new ActivityAlreadyEnded();
             case ActivityState.Paused:
-                return Unit.Default;
+                return Unit.Value;
             default:
                 throw new ArgumentException(nameof(State));
         }
@@ -85,12 +82,12 @@ public sealed record Activity : AggregateRoot<ActivityId, Guid>
         switch (State)
         {
             case ActivityState.Running:
-                return Unit.Default;
+                return Unit.Value;
             case ActivityState.Ended:
                 return new ActivityAlreadyEnded();
             case ActivityState.Paused:
                 State = ActivityState.Running;
-                return Unit.Default;
+                return Unit.Value;
             default:
                 throw new ArgumentException(nameof(State));
         }
@@ -103,12 +100,12 @@ public sealed record Activity : AggregateRoot<ActivityId, Guid>
         {
             case ActivityState.Running:
                 State = ActivityState.Ended;
-                return Unit.Default;
+                return Unit.Value;
             case ActivityState.Ended:
-                return Unit.Default;
+                return Unit.Value;
             case ActivityState.Paused:
                 State = ActivityState.Ended;
-                return Unit.Default;
+                return Unit.Value;
             default:
                 throw new ArgumentException(nameof(State));
         }
