@@ -5,4 +5,8 @@
         <ImplicitUsings>enable</ImplicitUsings>
     </PropertyGroup>
 
+    <ItemGroup>
+      <ProjectReference Include="..\Tracky.Domain\Tracky.Domain.csproj" />
+    </ItemGroup>
+
 </Project>

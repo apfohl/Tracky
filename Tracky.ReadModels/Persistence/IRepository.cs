@@ -1,15 +1,17 @@
 using System.Linq.Expressions;
+using MediatR;
+using Tracky.Domain.Common;
 using Tracky.ReadModels.Common;
 
 namespace Tracky.ReadModels.Persistence;
 
 public interface IRepository<T> where T : IReadModel
 {
-    Task<IEnumerable<T>> FindAllAsync(Expression<Func<T, bool>> predicate);
+    Task<Result<IEnumerable<T>>> FindAllAsync(Expression<Func<T, bool>> predicate);
 
-    Task<T> GetByIdAsync(string id);
+    Task<Result<T>> GetByIdAsync(string id);
 
-    Task InsertAsync(T entity);
+    Task<Result<Unit>> InsertAsync(T entity);
 
-    Task UpdateAsync(T entity);
+    Task<Result<Unit>> UpdateAsync(T entity);
 }
