@@ -2,12 +2,12 @@ using MediatR;
 
 namespace Tracky.Domain.Common;
 
-public abstract record AggregateRoot<TId, TIdType> : Entity<TId> where TId : AggregateRootId<TIdType>
+public abstract record AggregateRoot<TId> : Entity<TId> where TId : AggregateRootId
 {
-    private readonly List<DomainEvent<TId, TIdType>> uncommittedEvents = [];
+    private readonly List<DomainEvent<TId>> uncommittedEvents = [];
     private int version;
 
-    protected AggregateRoot(TId id, IEnumerable<DomainEvent<TId, TIdType>> events)
+    protected AggregateRoot(TId id, IEnumerable<DomainEvent<TId>> events)
     {
         Id = id;
         foreach (var @event in events)
@@ -17,14 +17,14 @@ public abstract record AggregateRoot<TId, TIdType> : Entity<TId> where TId : Agg
         }
     }
 
-    public async Task Commit(Func<TId, int, IEnumerable<DomainEvent<TId, TIdType>>, Task> persist)
+    public async Task Commit(Func<TId, int, IEnumerable<DomainEvent<TId>>, Task> persist)
     {
         await persist(Id, version, uncommittedEvents.AsReadOnly());
         version += uncommittedEvents.Count;
         uncommittedEvents.Clear();
     }
 
-    protected Result<Unit> ApplyDomainEvent(DomainEvent<TId, TIdType> domainEvent)
+    protected Result<Unit> ApplyDomainEvent(DomainEvent<TId> domainEvent)
     {
         Result<Unit> result = ((dynamic)this).Apply((dynamic)domainEvent);
 

@@ -6,7 +6,7 @@ using Tracky.Domain.Common;
 
 namespace Tracky.Application.Activities.Commands.StartActivity;
 
-public sealed class StartActivityCommandHandler(IRepository<Activity, ActivityId, Guid> activityRepository)
+public sealed class StartActivityCommandHandler(IRepository<Activity, ActivityId> activityRepository)
     : IRequestHandler<StartActivityCommand, Result<Unit>>
 {
     public Task<Result<Unit>> Handle(StartActivityCommand command, CancellationToken _) =>

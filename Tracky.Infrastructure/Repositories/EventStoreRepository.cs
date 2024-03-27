@@ -4,10 +4,9 @@ using Tracky.Domain.Common;
 
 namespace Tracky.Infrastructure.Repositories;
 
-public sealed class EventStoreRepository<TAggregate, TAggregateId, TAggregateIdType> :
-    IRepository<TAggregate, TAggregateId, TAggregateIdType>
-    where TAggregate : AggregateRoot<TAggregateId, TAggregateIdType>
-    where TAggregateId : AggregateRootId<TAggregateIdType>
+public sealed class EventStoreRepository<TAggregate, TAggregateId> : IRepository<TAggregate, TAggregateId>
+    where TAggregate : AggregateRoot<TAggregateId>
+    where TAggregateId : AggregateRootId
 {
     public Task<Result<TAggregate>> GetByIdAsync(TAggregateId id)
     {

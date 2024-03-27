@@ -1,3 +1,3 @@
 namespace Tracky.Domain.Common;
 
-public abstract record AggregateRootId<TId>(TId Value) : EntityId<TId>(Value);
+public abstract record AggregateRootId(Guid Value) : EntityId<Guid>(Value);

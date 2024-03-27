@@ -3,9 +3,9 @@ using Tracky.Domain.Common;
 
 namespace Tracky.Application.Interfaces;
 
-public interface IRepository<TAggregate, in TAggregateId, TAggregateIdType>
-    where TAggregate : AggregateRoot<TAggregateId, TAggregateIdType>
-    where TAggregateId : AggregateRootId<TAggregateIdType>
+public interface IRepository<TAggregate, in TAggregateId>
+    where TAggregate : AggregateRoot<TAggregateId>
+    where TAggregateId : AggregateRootId
 {
     Task<Result<TAggregate>> GetByIdAsync(TAggregateId id);
 

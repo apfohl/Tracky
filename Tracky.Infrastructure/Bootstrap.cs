@@ -13,5 +13,5 @@ public static class Bootstrap
     public static IServiceCollection AddInfrastructure(this IServiceCollection services) =>
         services
             .AddTransient<IRepository<ActivityReadModel>, MongoDatabaseRepository<ActivityReadModel>>()
-            .AddTransient<IRepository<Activity, ActivityId, Guid>, EventStoreRepository<Activity, ActivityId, Guid>>();
+            .AddTransient<IRepository<Activity, ActivityId>, EventStoreRepository<Activity, ActivityId>>();
 }
