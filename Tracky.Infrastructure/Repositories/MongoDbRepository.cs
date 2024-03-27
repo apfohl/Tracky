@@ -6,7 +6,7 @@ using Tracky.ReadModels.Persistence;
 
 namespace Tracky.Infrastructure.Repositories;
 
-public sealed class MongoDatabaseRepository<T> : IRepository<T> where T : IReadModel
+public sealed class MongoDbRepository<T> : IRepository<T> where T : IReadModel
 {
     public Task<Result<IEnumerable<T>>> FindAllAsync(Expression<Func<T, bool>> predicate)
     {
