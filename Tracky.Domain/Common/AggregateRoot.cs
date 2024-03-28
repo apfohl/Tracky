@@ -17,28 +17,15 @@ public abstract record AggregateRoot<TId> : Entity<TId> where TId : AggregateRoo
         }
     }
 
-    public async Task<Result<Unit>> Commit(Func<TId, int, IEnumerable<DomainEvent>, Task<Result<Unit>>> persist)
-    {
-        var result = await persist(Id, version, uncommittedEvents.AsReadOnly());
-
-        result.Switch(_ =>
+    public Task<Result<Unit>> Commit(Func<TId, int, IEnumerable<DomainEvent>, Task<Result<Unit>>> persist) =>
+        persist(Id, version, uncommittedEvents.AsReadOnly())
+            .TapAsync(_ =>
             {
                 version += uncommittedEvents.Count;
                 uncommittedEvents.Clear();
-            },
-            _ => { });
+            });
 
-        return result;
-    }
-
-    protected Result<Unit> ApplyDomainEvent(DomainEvent domainEvent)
-    {
-        Result<Unit> result = ((dynamic)this).Apply((dynamic)domainEvent);
-
-        result.Switch(
-            _ => uncommittedEvents.Add(domainEvent),
-            _ => { });
-
-        return result;
-    }
+    protected Result<Unit> ApplyDomainEvent(DomainEvent domainEvent) =>
+        ((Result<Unit>)((dynamic)this).Apply(domainEvent))
+        .Tap(_ => uncommittedEvents.Add(domainEvent));
 }

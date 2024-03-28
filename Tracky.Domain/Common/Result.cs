@@ -43,4 +43,14 @@ public static class ResultExtensions
 
     public static async Task<Result<TResult>> BindAsync<T, TResult>(this Task<Result<T>> result,
         Func<T, Task<Result<TResult>>> mapping) => await (await result).BindAsync(mapping);
+
+    public static Result<T> Tap<T>(this Result<T> result, Action<T> action)
+    {
+        result.Switch(action, _ => { });
+
+        return result;
+    }
+
+    public static async Task<Result<T>> TapAsync<T>(this Task<Result<T>> result, Action<T> action) =>
+        (await result).Tap(action);
 }
