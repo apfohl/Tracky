@@ -27,6 +27,6 @@ public sealed class EventStoreRepository<TAggregate, TAggregateId>(IEventStore e
             return result;
         });
 
-    private static TAggregate MaterializeAggregate(TAggregateId id, IEnumerable<DomainEvent<TAggregateId>> events) =>
+    private static TAggregate MaterializeAggregate(TAggregateId id, IEnumerable<DomainEvent> events) =>
         (TAggregate)Activator.CreateInstance(typeof(TAggregate), id, events);
 }

@@ -38,10 +38,10 @@ public static class ActivityTests
     public static Task Materialize_creates_an_activity_from_an_event_list()
     {
         var id = ActivityId.CreateUnique();
-        var events = new List<DomainEvent<ActivityId>>
+        var events = new List<DomainEvent>
         {
-            new ActivityStarted(id, "Test Description"),
-            new ActivityDescriptionChanged(id, "New Description")
+            new ActivityStarted("Test Description"),
+            new ActivityDescriptionChanged("New Description")
         };
 
         var activity = new Activity(id, events);

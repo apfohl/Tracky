@@ -13,24 +13,24 @@ public sealed record Activity : AggregateRoot<ActivityId>
     public string Description { get; private set; }
     public ActivityState State { get; private set; } = ActivityState.Created;
 
-    public Activity(ActivityId id, IEnumerable<DomainEvent<ActivityId>> events) : base(id, events)
+    public Activity(ActivityId id, IEnumerable<DomainEvent> events) : base(id, events)
     {
     }
 
     public static Activity Create() =>
-        new(ActivityId.CreateUnique(), Array.Empty<DomainEvent<ActivityId>>());
+        new(ActivityId.CreateUnique(), Array.Empty<DomainEvent>());
 
     public Result<Activity> Start(string description) =>
-        ApplyDomainEvent(new ActivityStarted(Id, description)).Map(_ => this);
+        ApplyDomainEvent(new ActivityStarted(description)).Map(_ => this);
 
     public Result<Activity> ChangeDescription(string description) =>
-        ApplyDomainEvent(new ActivityDescriptionChanged(Id, description)).Map(_ => this);
+        ApplyDomainEvent(new ActivityDescriptionChanged(description)).Map(_ => this);
 
-    public Result<Activity> Pause() => ApplyDomainEvent(new ActivityPaused(Id)).Map(_ => this);
+    public Result<Activity> Pause() => ApplyDomainEvent(new ActivityPaused()).Map(_ => this);
 
-    public Result<Activity> Resume() => ApplyDomainEvent(new ActivityResumed(Id)).Map(_ => this);
+    public Result<Activity> Resume() => ApplyDomainEvent(new ActivityResumed()).Map(_ => this);
 
-    public Result<Activity> End() => ApplyDomainEvent(new ActivityEnded(Id)).Map(_ => this);
+    public Result<Activity> End() => ApplyDomainEvent(new ActivityEnded()).Map(_ => this);
 
     [UsedImplicitly]
     internal Result<Unit> Apply(ActivityStarted @event)

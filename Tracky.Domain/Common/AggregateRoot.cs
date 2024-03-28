@@ -4,10 +4,10 @@ namespace Tracky.Domain.Common;
 
 public abstract record AggregateRoot<TId> : Entity<TId> where TId : AggregateRootId
 {
-    private readonly List<DomainEvent<TId>> uncommittedEvents = [];
+    private readonly List<DomainEvent> uncommittedEvents = [];
     private int version;
 
-    protected AggregateRoot(TId id, IEnumerable<DomainEvent<TId>> events)
+    protected AggregateRoot(TId id, IEnumerable<DomainEvent> events)
     {
         Id = id;
         foreach (var @event in events)
@@ -17,7 +17,7 @@ public abstract record AggregateRoot<TId> : Entity<TId> where TId : AggregateRoo
         }
     }
 
-    public async Task<Result<Unit>> Commit(Func<TId, int, IEnumerable<DomainEvent<TId>>, Task<Result<Unit>>> persist)
+    public async Task<Result<Unit>> Commit(Func<TId, int, IEnumerable<DomainEvent>, Task<Result<Unit>>> persist)
     {
         var result = await persist(Id, version, uncommittedEvents.AsReadOnly());
 
@@ -31,7 +31,7 @@ public abstract record AggregateRoot<TId> : Entity<TId> where TId : AggregateRoo
         return result;
     }
 
-    protected Result<Unit> ApplyDomainEvent(DomainEvent<TId> domainEvent)
+    protected Result<Unit> ApplyDomainEvent(DomainEvent domainEvent)
     {
         Result<Unit> result = ((dynamic)this).Apply((dynamic)domainEvent);
 
