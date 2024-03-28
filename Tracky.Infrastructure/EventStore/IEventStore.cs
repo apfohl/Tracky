@@ -8,6 +8,6 @@ public interface IEventStore
     Task<Result<IEnumerable<DomainEvent<TAggregateId>>>> ReadEventsAsync<TAggregateId>(TAggregateId aggregateId)
         where TAggregateId : AggregateRootId;
 
-    Task<Result<Unit>> AppendEventAsync<TAggregateId, TAggregateIdType>(DomainEvent<TAggregateId> @event)
+    Task<Result<Unit>> AppendEventAsync<TAggregateId>(DomainEvent<TAggregateId> @event)
         where TAggregateId : AggregateRootId;
 }

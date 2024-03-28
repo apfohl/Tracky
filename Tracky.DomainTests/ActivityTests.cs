@@ -1,3 +1,4 @@
+using MediatR;
 using Tracky.Domain.Activity;
 using Tracky.Domain.Activity.Enums;
 using Tracky.Domain.Activity.Errors;
@@ -29,7 +30,7 @@ public static class ActivityTests
             eventsList.Should().HaveCount(1);
             eventsList.Should().ContainSingle(e => e is ActivityStarted);
 
-            return Task.CompletedTask;
+            return Task.FromResult<Result<Unit>>(Unit.Value);
         });
     }
 
@@ -59,7 +60,7 @@ public static class ActivityTests
             eventsList.Should().ContainSingle(e => e is ActivityStarted);
             eventsList.Should().ContainSingle(e => e is ActivityDescriptionChanged);
 
-            return Task.CompletedTask;
+            return Task.FromResult<Result<Unit>>(Unit.Value);
         });
     }
 
@@ -83,7 +84,7 @@ public static class ActivityTests
             eventsList.Should().ContainSingle(e => e is ActivityStarted);
             eventsList.Should().ContainSingle(e => e is ActivityDescriptionChanged);
 
-            return Task.CompletedTask;
+            return Task.FromResult<Result<Unit>>(Unit.Value);
         });
     }
 
