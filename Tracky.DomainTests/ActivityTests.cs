@@ -21,9 +21,8 @@ public static class ActivityTests
         activity.Description.Should().Be(description);
         activity.State.Should().Be(ActivityState.Running);
 
-        return activity.Commit((id, version, events) =>
+        return activity.Commit((version, events) =>
         {
-            id.Should().Be(activity.Id);
             version.Should().Be(0);
 
             var eventsList = events.ToList();
@@ -50,9 +49,8 @@ public static class ActivityTests
         activity.Description.Should().Be("New Description");
         activity.State.Should().Be(ActivityState.Running);
 
-        return activity.Commit((i, v, ev) =>
+        return activity.Commit((v, ev) =>
         {
-            i.Should().Be(activity.Id);
             v.Should().Be(2);
 
             var eventsList = ev.ToList();
@@ -74,9 +72,8 @@ public static class ActivityTests
 
         activity.Description.Should().Be("New Description");
 
-        return activity.Commit((id, version, events) =>
+        return activity.Commit((version, events) =>
         {
-            id.Should().Be(activity.Id);
             version.Should().Be(0);
 
             var eventsList = events.ToList();

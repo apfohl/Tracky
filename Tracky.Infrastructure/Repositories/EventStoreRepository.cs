@@ -15,13 +15,13 @@ public sealed class EventStoreRepository<TAggregate, TAggregateId>(IEventStore e
         .Map(events => MaterializeAggregate(id, events));
 
     public async Task<Result<Unit>> SaveAsync(TAggregate aggregate) =>
-        await aggregate.Commit(async (id, version, events) =>
+        await aggregate.Commit(async (version, events) =>
         {
             Result<Unit> result = Unit.Value;
 
             foreach (var @event in events)
             {
-                result = await result.BindAsync(_ => eventStore.AppendEventAsync(@event));
+                result = await result.BindAsync(_ => eventStore.AppendEventAsync(aggregate.Id, version, @event));
             }
 
             return result;

@@ -17,8 +17,8 @@ public abstract record AggregateRoot<TId> : Entity<TId> where TId : AggregateRoo
         }
     }
 
-    public Task<Result<Unit>> Commit(Func<TId, int, IEnumerable<DomainEvent>, Task<Result<Unit>>> persist) =>
-        persist(Id, version, uncommittedEvents.AsReadOnly())
+    public Task<Result<Unit>> Commit(Func<int, IEnumerable<DomainEvent>, Task<Result<Unit>>> persist) =>
+        persist(version, uncommittedEvents.AsReadOnly())
             .TapAsync(_ =>
             {
                 version += uncommittedEvents.Count;
@@ -26,6 +26,6 @@ public abstract record AggregateRoot<TId> : Entity<TId> where TId : AggregateRoo
             });
 
     protected Result<Unit> ApplyDomainEvent(DomainEvent domainEvent) =>
-        ((Result<Unit>)((dynamic)this).Apply(domainEvent))
+        ((Result<Unit>)((dynamic)this).Apply((dynamic)domainEvent))
         .Tap(_ => uncommittedEvents.Add(domainEvent));
 }
