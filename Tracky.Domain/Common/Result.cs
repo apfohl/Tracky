@@ -53,4 +53,7 @@ public static class ResultExtensions
 
     public static async Task<Result<T>> TapAsync<T>(this Task<Result<T>> result, Action<T> action) =>
         (await result).Tap(action);
+
+    public static Result<T> FirstOrError<T>(this IEnumerable<T> source, Func<T, bool> predicate, Error error) =>
+        source.FirstOrDefault(predicate) ?? (Result<T>)error;
 }
