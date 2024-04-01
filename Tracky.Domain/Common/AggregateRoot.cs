@@ -5,7 +5,7 @@ namespace Tracky.Domain.Common;
 public abstract record AggregateRoot<TId> : Entity<TId> where TId : AggregateRootId
 {
     private readonly List<DomainEvent> uncommittedEvents = [];
-    private int version;
+    private long version;
 
     protected AggregateRoot(TId id, IEnumerable<DomainEvent> events)
     {
@@ -17,13 +17,14 @@ public abstract record AggregateRoot<TId> : Entity<TId> where TId : AggregateRoo
         }
     }
 
-    public Task<Result<Unit>> Commit(Func<int, IEnumerable<DomainEvent>, Task<Result<Unit>>> persist) =>
+    public Task<Result<Unit>> Commit(Func<long, IEnumerable<DomainEvent>, Task<Result<long>>> persist) =>
         persist(version, uncommittedEvents.AsReadOnly())
-            .TapAsync(_ =>
+            .TapAsync(newVersion =>
             {
-                version += uncommittedEvents.Count;
+                version = newVersion;
                 uncommittedEvents.Clear();
-            });
+            })
+            .MapAsync(_ => Unit.Value);
 
     protected Result<Unit> ApplyDomainEvent(DomainEvent domainEvent) =>
         ((Result<Unit>)((dynamic)this).Apply((dynamic)domainEvent))
