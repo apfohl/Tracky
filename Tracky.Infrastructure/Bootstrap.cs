@@ -15,5 +15,5 @@ public static class Bootstrap
         services
             .AddTransient<IEventStore, EventStoreDb>()
             .AddTransient<IRepository<ActivityReadModel>, MongoDbRepository<ActivityReadModel>>()
-            .AddTransient<IRepository<Activity, ActivityId>, EventStoreRepository<Activity, ActivityId>>();
+            .AddTransient<IRepository<Activity, ActivityId>, EventStoreDbRepository<Activity, ActivityId>>();
 }

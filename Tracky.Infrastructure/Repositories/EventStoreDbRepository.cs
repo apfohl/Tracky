@@ -5,7 +5,7 @@ using Tracky.Infrastructure.EventStore;
 
 namespace Tracky.Infrastructure.Repositories;
 
-public sealed class EventStoreRepository<TAggregate, TAggregateId>(IEventStore eventStore)
+public sealed class EventStoreDbRepository<TAggregate, TAggregateId>(IEventStore eventStore)
     : IRepository<TAggregate, TAggregateId>
     where TAggregate : AggregateRoot<TAggregateId>
     where TAggregateId : AggregateRootId
