@@ -4,8 +4,10 @@ namespace Tracky.Domain.Common;
 
 public abstract record AggregateRoot<TId> : Entity<TId> where TId : AggregateRootId
 {
+    public const long InitialVersion = -1;
+
     private readonly List<DomainEvent> uncommittedEvents = [];
-    private long version;
+    private long version = InitialVersion;
 
     protected AggregateRoot(TId id, IEnumerable<DomainEvent> events)
     {

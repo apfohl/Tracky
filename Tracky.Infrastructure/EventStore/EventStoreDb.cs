@@ -10,7 +10,7 @@ public sealed class EventStoreDb(EventStoreClient eventStoreClient) : IEventStor
     public Task<Result<IEnumerable<DomainEvent>>> ReadEventsAsync<TAggregateId>(TAggregateId aggregateId)
         where TAggregateId : AggregateRootId =>
         eventStoreClient
-            .ReadStreamAsync(Direction.Forwards, aggregateId.Value.ToString(), StreamPosition.Start)
+            .ReadStreamAsync(Direction.Forwards, aggregateId.AsString(), StreamPosition.Start)
             .Select(@event => DeserializeEvent(@event.Event.Data, @event.Event.EventType))
             .AggregateAsync(
                 (Result<List<DomainEvent>>)new List<DomainEvent>(),
@@ -24,8 +24,10 @@ public sealed class EventStoreDb(EventStoreClient eventStoreClient) : IEventStor
         try
         {
             var result = await eventStoreClient.AppendToStreamAsync(
-                id.Value.ToString(),
-                version == 0 ? StreamRevision.None : StreamRevision.FromInt64(version),
+                id.AsString(),
+                version == AggregateRoot<TAggregateId>.InitialVersion
+                    ? StreamRevision.None
+                    : StreamRevision.FromInt64(version),
                 events.Select(@event => new EventData(Uuid.NewUuid(), @event.GetType().Name, SerializeEvent(@event)))
                     .ToArray());
 
