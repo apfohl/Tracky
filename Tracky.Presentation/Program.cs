@@ -1,9 +1,11 @@
 using Tracky.Application;
 using Tracky.Infrastructure;
+using Tracky.Presentation;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services
+    .AddPresentation()
     .AddApplication()
     .AddInfrastructure()
     .AddControllersWithViews();

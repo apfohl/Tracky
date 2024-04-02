@@ -1,5 +1,3 @@
-version: "3.8"
-
 services:
   tracky:
     build:
@@ -26,7 +24,7 @@ services:
 
   eventstore:
     image: eventstore/eventstore
-    command: --insecure
+    command: --insecure --enable-atom-pub-over-http
     restart: unless-stopped
     logging:
       options:
