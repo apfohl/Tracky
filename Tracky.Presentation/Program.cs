@@ -1,5 +1,6 @@
 using MediatR;
 using Tracky.Application;
+using Tracky.Application.Activities.Commands.PauseActivity;
 using Tracky.Application.Activities.Commands.StartActivity;
 using Tracky.Application.Activities.Queries.ListActivities;
 using Tracky.Domain.Common;
@@ -36,11 +37,16 @@ app.MapGet("/activities/{id:guid}", async (ISender sender, Guid id) =>
         .Match(Results.Ok, Results.NotFound))
     .WithName("GetActivityById");
 
-app.MapPost("/activities", async (StartActivityRequestData requestData, ISender sender) =>
+app.MapPost("/activities", async (ISender sender, StartActivityRequestData requestData) =>
         (await sender.Send(new StartActivityCommand(requestData.Description)))
         .Match(
             activityId => Results.CreatedAtRoute("GetActivityById", new { id = activityId.Value }, activityId.Value),
             _ => Results.StatusCode(500)))
     .WithName("ListActivities");
+
+app.MapPut("/activities/{id:guid}/pause", async (ISender sender, Guid id) =>
+        (await sender.Send(new PauseActivityCommand(id)))
+        .Match(_ => Results.Ok(), Results.NotFound))
+    .WithName("PauseActivity");
 
 app.Run();
