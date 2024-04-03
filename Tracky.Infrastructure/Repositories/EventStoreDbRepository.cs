@@ -1,8 +1,8 @@
 using MediatR;
-using Tracky.Application.Interfaces;
+using Tracky.Application.Activities.ReadModels;
+using Tracky.Application.Persistence.Events;
 using Tracky.Domain.Common;
 using Tracky.Infrastructure.EventStore;
-using Tracky.ReadModels.Activities;
 
 namespace Tracky.Infrastructure.Repositories;
 

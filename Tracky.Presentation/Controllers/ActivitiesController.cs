@@ -2,8 +2,8 @@ using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Tracky.Application.Activities.Commands.StartActivity;
 using Tracky.Application.Activities.Queries.ListActivities;
+using Tracky.Application.Activities.ReadModels;
 using Tracky.Domain.Common;
-using Tracky.ReadModels.Activities;
 
 namespace Tracky.Presentation.Controllers;
 

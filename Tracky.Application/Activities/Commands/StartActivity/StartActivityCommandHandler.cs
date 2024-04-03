@@ -1,5 +1,5 @@
 using MediatR;
-using Tracky.Application.Interfaces;
+using Tracky.Application.Persistence.Events;
 using Tracky.Domain.Activity;
 using Tracky.Domain.Activity.ValueObjects;
 using Tracky.Domain.Common;

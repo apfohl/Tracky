@@ -1,4 +1,4 @@
-namespace Tracky.ReadModels.Common;
+namespace Tracky.Application.Common;
 
 public interface IReadModel
 {

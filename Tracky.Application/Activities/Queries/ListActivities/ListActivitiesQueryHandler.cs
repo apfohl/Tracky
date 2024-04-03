@@ -1,7 +1,7 @@
 using MediatR;
+using Tracky.Application.Activities.ReadModels;
+using Tracky.Application.Persistence.ReadModels;
 using Tracky.Domain.Common;
-using Tracky.ReadModels.Activities;
-using Tracky.ReadModels.Persistence;
 
 namespace Tracky.Application.Activities.Queries.ListActivities;
 

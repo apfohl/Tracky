@@ -1,6 +1,6 @@
 using Tracky.Domain.Common;
 
-namespace Tracky.Application.Interfaces;
+namespace Tracky.Application.Persistence.Events;
 
 public interface IRepository<TAggregate, TAggregateId>
     where TAggregate : AggregateRoot<TAggregateId>

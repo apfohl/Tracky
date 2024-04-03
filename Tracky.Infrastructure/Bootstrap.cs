@@ -1,12 +1,12 @@
 using Microsoft.Extensions.DependencyInjection;
 using MongoDB.Driver;
-using Tracky.Application.Interfaces;
+using Tracky.Application.Activities.ReadModels;
+using Tracky.Application.Persistence.Events;
+using Tracky.Application.Persistence.ReadModels;
 using Tracky.Domain.Activity;
 using Tracky.Domain.Activity.ValueObjects;
 using Tracky.Infrastructure.EventStore;
 using Tracky.Infrastructure.Repositories;
-using Tracky.ReadModels.Activities;
-using Tracky.ReadModels.Persistence;
 
 namespace Tracky.Infrastructure;
 

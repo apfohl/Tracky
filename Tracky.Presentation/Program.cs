@@ -1,14 +1,12 @@
 using Tracky.Application;
 using Tracky.Infrastructure;
 using Tracky.Presentation;
-using Tracky.ReadModels;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services
     .AddPresentation()
     .AddApplication()
-    .AddReadModels()
     .AddInfrastructure()
     .AddControllersWithViews();
 

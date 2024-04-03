@@ -1,9 +1,9 @@
 using System.Linq.Expressions;
 using MediatR;
 using MongoDB.Driver;
+using Tracky.Application.Common;
+using Tracky.Application.Persistence.ReadModels;
 using Tracky.Domain.Common;
-using Tracky.ReadModels.Common;
-using Tracky.ReadModels.Persistence;
 
 namespace Tracky.Infrastructure.Repositories;
 

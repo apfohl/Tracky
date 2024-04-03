@@ -1,9 +1,9 @@
 using System.Linq.Expressions;
 using MediatR;
+using Tracky.Application.Common;
 using Tracky.Domain.Common;
-using Tracky.ReadModels.Common;
 
-namespace Tracky.ReadModels.Persistence;
+namespace Tracky.Application.Persistence.ReadModels;
 
 public interface IRepository<T> where T : IReadModel
 {

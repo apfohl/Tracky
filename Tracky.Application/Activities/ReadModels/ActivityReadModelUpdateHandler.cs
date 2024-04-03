@@ -1,9 +1,9 @@
 using MediatR;
+using Tracky.Application.Persistence.ReadModels;
 using Tracky.Domain.Activity.Events;
 using Tracky.Domain.Common;
-using Tracky.ReadModels.Persistence;
 
-namespace Tracky.ReadModels.Activities;
+namespace Tracky.Application.Activities.ReadModels;
 
 public sealed class ActivityReadModelUpdateHandler(IRepository<ActivityReadModel> activityRepository)
     : INotificationHandler<ActivityReadModelUpdate>

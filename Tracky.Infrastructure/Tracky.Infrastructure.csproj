@@ -7,7 +7,6 @@
 
     <ItemGroup>
       <ProjectReference Include="..\Tracky.Application\Tracky.Application.csproj" />
-      <ProjectReference Include="..\Tracky.ReadModels\Tracky.ReadModels.csproj" />
     </ItemGroup>
 
     <ItemGroup>

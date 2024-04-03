@@ -1,6 +1,6 @@
-using Tracky.ReadModels.Common;
+using Tracky.Application.Common;
 
-namespace Tracky.ReadModels.Activities;
+namespace Tracky.Application.Activities.ReadModels;
 
 public enum ActivityState
 {
