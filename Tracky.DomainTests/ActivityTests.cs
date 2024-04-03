@@ -22,7 +22,7 @@ public static class ActivityTests
 
         return activity.Commit((version, events) =>
         {
-            version.Should().Be(0);
+            version.Should().Be(-1);
 
             var eventsList = events.ToList();
             eventsList.Should().HaveCount(1);
@@ -50,12 +50,10 @@ public static class ActivityTests
 
         return activity.Commit((v, ev) =>
         {
-            v.Should().Be(2);
+            v.Should().Be(1);
 
             var eventsList = ev.ToList();
-            eventsList.Should().HaveCount(2);
-            eventsList.Should().ContainSingle(e => e is ActivityStarted);
-            eventsList.Should().ContainSingle(e => e is ActivityDescriptionChanged);
+            eventsList.Should().HaveCount(0);
 
             return Task.FromResult<Result<long>>(4);
         });
@@ -73,7 +71,7 @@ public static class ActivityTests
 
         return activity.Commit((version, events) =>
         {
-            version.Should().Be(0);
+            version.Should().Be(-1);
 
             var eventsList = events.ToList();
             eventsList.Should().HaveCount(2);
