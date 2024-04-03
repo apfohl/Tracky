@@ -28,41 +28,6 @@ public sealed class ActivitiesController(ISender sender) : ControllerBase
         (await sender.Send(new ListActivitiesQuery()))
         .Bind(activities => activities.FirstOrError(activity => activity.Id == id.ToString(), new ActivityNotFound(id)))
         .Match<ActionResult>(Ok, NotFound);
-
-    // [HttpPut("{id:guid}")]
-    // public IActionResult PutActivity(Guid id, Activity activity)
-    // {
-    //     if (id != activity.Id)
-    //     {
-    //         return BadRequest();
-    //     }
-    //
-    //     var existingActivity = Activities.Find(a => a.Id == id);
-    //     if (existingActivity == null)
-    //     {
-    //         return NotFound();
-    //     }
-    //
-    //     existingActivity =
-    //         activity; // In a real application, you would handle updating the properties of the existing activity.
-    //
-    //     return NoContent();
-    // }
-    //
-    //
-    // [HttpDelete("{id:guid}")]
-    // public IActionResult DeleteActivity(Guid id)
-    // {
-    //     var activity = Activities.Find(a => a.Id == id);
-    //     if (activity == null)
-    //     {
-    //         return NotFound();
-    //     }
-    //
-    //     Activities.Remove(activity);
-    //
-    //     return NoContent();
-    // }
 }
 
 public sealed record ActivityNotFound(Guid Id) : Error;
