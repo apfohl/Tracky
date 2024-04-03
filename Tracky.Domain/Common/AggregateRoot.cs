@@ -14,7 +14,7 @@ public abstract record AggregateRoot<TId> : Entity<TId> where TId : AggregateRoo
         Id = id;
         foreach (var @event in events)
         {
-            ApplyDomainEvent(@event);
+            ((dynamic)this).Apply((dynamic)@event);
             version++;
         }
     }
