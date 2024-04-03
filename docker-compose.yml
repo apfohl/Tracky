@@ -30,6 +30,8 @@ services:
       options:
         max-size: "8m"
         max-file: "10"
+    environment:
+      EVENTSTORE_TELEMETRY_OPTOUT: "true"
     volumes:
       - eventstore-data:/var/lib/eventstore
       - eventstore-logs:/var/log/eventstore
