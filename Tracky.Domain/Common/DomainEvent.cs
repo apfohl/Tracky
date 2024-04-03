@@ -1,8 +1,6 @@
-using MediatR;
-
 namespace Tracky.Domain.Common;
 
-public abstract record DomainEvent : INotification
+public abstract record DomainEvent
 {
     public DateTime OccurredOn { get; } = DateTime.Now;
 }
