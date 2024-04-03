@@ -9,7 +9,7 @@ public interface IRepository<T> where T : IReadModel
 {
     Task<Result<IEnumerable<T>>> FindAllAsync(Expression<Func<T, bool>> predicate);
 
-    Task<Result<T>> GetByIdAsync(string id);
+    Task<Result<T>> GetByIdAsync(Guid id);
 
     Task<Result<Unit>> InsertAsync(T entity);
 

@@ -2,10 +2,11 @@ using MediatR;
 using Tracky.Application.Interfaces;
 using Tracky.Domain.Common;
 using Tracky.Infrastructure.EventStore;
+using Tracky.ReadModels.Activities;
 
 namespace Tracky.Infrastructure.Repositories;
 
-public sealed class EventStoreDbRepository<TAggregate, TAggregateId>(IEventStore eventStore)
+public sealed class EventStoreDbRepository<TAggregate, TAggregateId>(IEventStore eventStore, IPublisher publisher)
     : IRepository<TAggregate, TAggregateId>
     where TAggregate : AggregateRoot<TAggregateId>
     where TAggregateId : AggregateRootId
@@ -15,7 +16,16 @@ public sealed class EventStoreDbRepository<TAggregate, TAggregateId>(IEventStore
         .Map(events => MaterializeAggregate(id, events));
 
     public async Task<Result<Unit>> SaveAsync(TAggregate aggregate) =>
-        await aggregate.Commit((version, events) => eventStore.AppendEventsAsync(aggregate.Id, version, events));
+        await aggregate.Commit(async (version, events) =>
+        {
+            var eventList = events.ToList();
+
+            var newVersion = await eventStore.AppendEventsAsync(aggregate.Id, version, eventList);
+
+            await publisher.Publish(new ActivityReadModelUpdate(aggregate.Id.Value, eventList));
+
+            return newVersion;
+        });
 
     private static TAggregate MaterializeAggregate(TAggregateId id, IEnumerable<DomainEvent> events) =>
         (TAggregate)Activator.CreateInstance(typeof(TAggregate), id, events);

@@ -1,4 +1,5 @@
 using EventStore.Client;
+using MongoDB.Driver;
 
 namespace Tracky.Presentation;
 
@@ -9,5 +10,6 @@ public static class Bootstrap
 
     public static IServiceCollection AddPresentation(this IServiceCollection services) =>
         services
-            .AddSingleton(_ => new EventStoreClient(EventStoreClientSettings.Create(ConnectionString)));
+            .AddSingleton(_ => new EventStoreClient(EventStoreClientSettings.Create(ConnectionString)))
+            .AddSingleton(_ => new MongoClient("mongodb://localhost:27017"));
 }

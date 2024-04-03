@@ -17,7 +17,7 @@ public sealed class ActivitiesController(ISender sender) : ControllerBase
         .Match<ActionResult>(Ok, NotFound);
 
     [HttpPost]
-    public async Task<ActionResult<Guid>> StartActivity(string description) =>
+    public async Task<ActionResult<Guid>> StartActivity([FromBody] string description) =>
         (await sender.Send(new StartActivityCommand(description)))
         .Match<ActionResult>(
             _ => CreatedAtAction(nameof(GetActivity), new { id = Guid.NewGuid() }, Guid.NewGuid()),

@@ -9,4 +9,8 @@
       <ProjectReference Include="..\Tracky.Domain\Tracky.Domain.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <PackageReference Include="MediatR" Version="12.2.0" />
+    </ItemGroup>
+
 </Project>
