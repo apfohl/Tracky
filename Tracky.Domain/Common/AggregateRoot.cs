@@ -19,14 +19,14 @@ public abstract record AggregateRoot<TId> : Entity<TId> where TId : AggregateRoo
         }
     }
 
-    public Task<Result<Unit>> Commit(Func<long, IEnumerable<DomainEvent>, Task<Result<long>>> persist) =>
+    public Task<Result<TId>> Commit(Func<long, IEnumerable<DomainEvent>, Task<Result<long>>> persist) =>
         persist(version, uncommittedEvents.AsReadOnly())
             .TapAsync(newVersion =>
             {
                 version = newVersion;
                 uncommittedEvents.Clear();
             })
-            .MapAsync(_ => Unit.Value);
+            .MapAsync(_ => Id);
 
     protected Result<Unit> ApplyDomainEvent(DomainEvent domainEvent) =>
         ((Result<Unit>)((dynamic)this).Apply((dynamic)domainEvent))

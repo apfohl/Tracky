@@ -20,7 +20,7 @@ public sealed class ActivitiesController(ISender sender) : ControllerBase
     public async Task<ActionResult<Guid>> StartActivity([FromBody] string description) =>
         (await sender.Send(new StartActivityCommand(description)))
         .Match<ActionResult>(
-            _ => CreatedAtAction(nameof(GetActivity), new { id = Guid.NewGuid() }, Guid.NewGuid()),
+            activityId => CreatedAtAction(nameof(GetActivity), new { id = activityId.Value }),
             _ => StatusCode(500));
 
     [HttpGet("{id:guid}")]

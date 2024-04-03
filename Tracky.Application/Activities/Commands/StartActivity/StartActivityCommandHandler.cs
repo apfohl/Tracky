@@ -7,9 +7,9 @@ using Tracky.Domain.Common;
 namespace Tracky.Application.Activities.Commands.StartActivity;
 
 public sealed class StartActivityCommandHandler(IRepository<Activity, ActivityId> activityRepository)
-    : IRequestHandler<StartActivityCommand, Result<Unit>>
+    : IRequestHandler<StartActivityCommand, Result<ActivityId>>
 {
-    public Task<Result<Unit>> Handle(StartActivityCommand command, CancellationToken _) =>
+    public Task<Result<ActivityId>> Handle(StartActivityCommand command, CancellationToken _) =>
         Activity.Create().ToResult()
             .Bind(activity => activity.Start(command.Description))
             .BindAsync(activityRepository.SaveAsync);

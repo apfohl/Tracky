@@ -15,7 +15,7 @@ public sealed class EventStoreDbRepository<TAggregate, TAggregateId>(IEventStore
         (await eventStore.ReadEventsAsync(id))
         .Map(events => MaterializeAggregate(id, events));
 
-    public async Task<Result<Unit>> SaveAsync(TAggregate aggregate) =>
+    public async Task<Result<TAggregateId>> SaveAsync(TAggregate aggregate) =>
         await aggregate.Commit(async (version, events) =>
         {
             var eventList = events.ToList();
