@@ -6,10 +6,9 @@ using Tracky.Application.Activities.Commands.PauseActivity;
 using Tracky.Application.Activities.Commands.ResumeActivity;
 using Tracky.Application.Activities.Commands.StartActivity;
 using Tracky.Application.Activities.Queries.ListActivities;
-using Tracky.Domain.Common;
+using Tracky.Application.Activities.Queries.ShowActivity;
 using Tracky.Infrastructure;
 using Tracky.Presentation;
-using Tracky.Presentation.Errors;
 using Tracky.Presentation.Models;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -35,8 +34,7 @@ app.MapGet("/activities", async (ISender sender) =>
     .WithName("GetActivities");
 
 app.MapGet("/activities/{id:guid}", async (ISender sender, Guid id) =>
-        (await sender.Send(new ListActivitiesQuery()))
-        .Bind(activities => activities.FirstOrError(activity => activity.Id == id.ToString(), new ActivityNotFound(id)))
+        (await sender.Send(new ShowActivityQuery(id)))
         .Match(Results.Ok, Results.NotFound))
     .WithName("GetActivityById");
 
