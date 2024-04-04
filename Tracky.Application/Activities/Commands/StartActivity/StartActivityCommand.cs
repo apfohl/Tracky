@@ -1,7 +1,6 @@
-using MediatR;
+using Tracky.Application.Common;
 using Tracky.Domain.Activity.ValueObjects;
-using Tracky.Domain.Common;
 
 namespace Tracky.Application.Activities.Commands.StartActivity;
 
-public sealed record StartActivityCommand(string Description) : IRequest<Result<ActivityId>>;
+public sealed record StartActivityCommand(string Description) : ICommand<ActivityId>;

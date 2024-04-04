@@ -1,6 +1,5 @@
-using MediatR;
-using Tracky.Domain.Common;
+using Tracky.Application.Common;
 
 namespace Tracky.Application.Activities.Commands.ChangeDescription;
 
-public sealed record ChangeDescriptionCommand(Guid Id, string Description) : IRequest<Result<Unit>>;
+public sealed record ChangeDescriptionCommand(Guid Id, string Description) : ICommand;

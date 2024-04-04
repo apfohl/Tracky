@@ -1,6 +1,5 @@
-using MediatR;
-using Tracky.Domain.Common;
+using Tracky.Application.Common;
 
 namespace Tracky.Application.Activities.Commands.EndActivity;
 
-public sealed record EndActivityCommand(Guid Id) : IRequest<Result<Unit>>;
+public sealed record EndActivityCommand(Guid Id) : ICommand;

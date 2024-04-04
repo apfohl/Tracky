@@ -1,6 +1,5 @@
-using MediatR;
-using Tracky.Domain.Common;
+using Tracky.Application.Common;
 
 namespace Tracky.Application.Activities.Commands.PauseActivity;
 
-public sealed record PauseActivityCommand(Guid Id) : IRequest<Result<Unit>>;
+public sealed record PauseActivityCommand(Guid Id) : ICommand;

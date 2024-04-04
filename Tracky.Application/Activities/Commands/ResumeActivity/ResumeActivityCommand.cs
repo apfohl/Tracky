@@ -1,6 +1,5 @@
-using MediatR;
-using Tracky.Domain.Common;
+using Tracky.Application.Common;
 
 namespace Tracky.Application.Activities.Commands.ResumeActivity;
 
-public sealed record ResumeActivityCommand(Guid Id) : IRequest<Result<Unit>>;
+public sealed record ResumeActivityCommand(Guid Id) : ICommand;
