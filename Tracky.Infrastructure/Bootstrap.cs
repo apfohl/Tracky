@@ -19,7 +19,7 @@ public static class Bootstrap
         services
             .AddSingleton(provider => provider.GetService<IMongoClient>().GetDatabase(ReadModelsDatabaseName))
             .AddTransient<IEventStore, EventStoreDb>()
-            .AddTransient<MongoDbContext<ActivityReadModel>>()
-            .AddTransient<IUnitOfWork<ActivityReadModel>, MongoDbUnitOfWork<ActivityReadModel>>()
+            .AddScoped<MongoDbContext<ActivityReadModel>>()
+            .AddScoped<IUnitOfWork<ActivityReadModel>, MongoDbUnitOfWork<ActivityReadModel>>()
             .AddTransient<IRepository<Activity, ActivityId>, EventStoreDbRepository<Activity, ActivityId>>();
 }
