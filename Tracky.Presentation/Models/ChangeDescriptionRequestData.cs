@@ -1,6 +1,6 @@
+using JetBrains.Annotations;
+
 namespace Tracky.Presentation.Models;
 
-public sealed record ChangeDescriptionRequestData(string Description)
-{
-
-}
+[UsedImplicitly]
+public sealed record ChangeDescriptionRequestData(string Description);
