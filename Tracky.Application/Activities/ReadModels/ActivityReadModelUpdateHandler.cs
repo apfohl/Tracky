@@ -1,50 +1,54 @@
 using MediatR;
-using Tracky.Application.Persistence.ReadModels;
+using Tracky.Application.Persistence;
 using Tracky.Domain.Activity.Events;
 using Tracky.Domain.Common;
 
 namespace Tracky.Application.Activities.ReadModels;
 
-public sealed class ActivityReadModelUpdateHandler(IRepository<ActivityReadModel> activityRepository)
+public sealed class ActivityReadModelUpdateHandler(IUnitOfWork<ActivityReadModel> unitOfWork)
     : INotificationHandler<ActivityReadModelUpdate>
 {
     public async Task Handle(ActivityReadModelUpdate notification, CancellationToken cancellationToken)
     {
+        var repository = unitOfWork.Repository;
+
         foreach (var @event in notification.Events)
         {
             switch (@event)
             {
                 case ActivityStarted e:
-                    await activityRepository.InsertAsync(
+                    repository.Insert(
                         new ActivityReadModel(notification.Id.ToString(), ActivityState.Running, e.Description));
                     break;
                 case ActivityPaused:
-                    await activityRepository.GetByIdAsync(notification.Id)
-                        .BindAsync(
-                            activity => activityRepository.UpdateAsync(activity with { State = ActivityState.Paused }));
+                    await repository.Lookup(notification.Id)
+                        .TapAsync(activity =>
+                            repository.Update(activity with { State = ActivityState.Paused }));
                     break;
                 case ActivityResumed:
-                    await activityRepository.GetByIdAsync(notification.Id)
-                        .BindAsync(
-                            activity => activityRepository.UpdateAsync(activity with
+                    await repository.Lookup(notification.Id)
+                        .TapAsync(
+                            activity => repository.Update(activity with
                             {
                                 State = ActivityState.Running
                             }));
                     break;
                 case ActivityEnded:
-                    await activityRepository.GetByIdAsync(notification.Id)
-                        .BindAsync(
-                            activity => activityRepository.UpdateAsync(activity with { State = ActivityState.Ended }));
+                    await repository.Lookup(notification.Id)
+                        .TapAsync(
+                            activity => repository.Update(activity with { State = ActivityState.Ended }));
                     break;
                 case ActivityDescriptionChanged e:
-                    await activityRepository.GetByIdAsync(notification.Id)
-                        .BindAsync(
-                            activity => activityRepository.UpdateAsync(activity with
+                    await repository.Lookup(notification.Id)
+                        .TapAsync(
+                            activity => repository.Update(activity with
                             {
                                 Description = e.Description
                             }));
                     break;
             }
         }
+
+        await unitOfWork.SaveChanges();
     }
 }

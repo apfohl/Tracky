@@ -14,9 +14,9 @@ using Tracky.Presentation.Models;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services
+    .AddPresentation()
     .AddApplication()
-    .AddInfrastructure()
-    .AddPresentation();
+    .AddInfrastructure();
 
 var app = builder.Build();
 

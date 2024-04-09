@@ -14,6 +14,7 @@ services:
 
   mongo:
     image: mongo
+    command: ["--replSet", "rs0"]
     restart: unless-stopped
     logging:
       options:
