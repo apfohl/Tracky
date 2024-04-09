@@ -13,9 +13,11 @@ namespace Tracky.Infrastructure;
 
 public static class Bootstrap
 {
+    private const string ReadModelsDatabaseName = "ReadModels";
+
     public static IServiceCollection AddInfrastructure(this IServiceCollection services) =>
         services
-            .AddSingleton(provider => provider.GetService<IMongoClient>().GetDatabase("ReadModels"))
+            .AddSingleton(provider => provider.GetService<IMongoClient>().GetDatabase(ReadModelsDatabaseName))
             .AddTransient<IEventStore, EventStoreDb>()
             .AddTransient<MongoDbContext<ActivityReadModel>>()
             .AddTransient<IUnitOfWork<ActivityReadModel>, MongoDbUnitOfWork<ActivityReadModel>>()
