@@ -26,8 +26,6 @@ if (!app.Environment.IsDevelopment())
     app.UseHsts();
 }
 
-app.UseHttpsRedirection();
-
 app.MapGet("/activities", async (ISender sender) =>
         (await sender.Send(new ListActivitiesQuery()))
         .Match(Results.Ok, Results.NotFound))

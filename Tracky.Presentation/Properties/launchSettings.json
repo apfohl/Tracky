@@ -8,8 +8,8 @@
       "applicationUrl": "http://localhost:5181",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development",
-        "CONNECTIONSTRINGS__EVENTSTORE": "esdb+discover://localhost:2113?tls=false&keepAliveTimeout=10000&keepAliveInterval=10000",
-        "CONNECTIONSTRINGS__MONGODB": "mongodb://localhost:27017/?directConnection=true"
+        "CONNECTIONSTRINGS__EVENTSTORE": "esdb://localhost:2113?tls=false&keepAliveTimeout=10000&keepAliveInterval=10000",
+        "CONNECTIONSTRINGS__MONGODB": "mongodb://localhost:27017?directConnection=true"
       }
     }
   }
