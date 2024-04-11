@@ -1,5 +1,7 @@
 using JetBrains.Annotations;
 using MediatR;
+using OneOf;
+using OneOf.Types;
 using Tracky.Domain.Activity.Enums;
 using Tracky.Domain.Activity.Errors;
 using Tracky.Domain.Activity.Events;
@@ -10,8 +12,13 @@ namespace Tracky.Domain.Activity;
 
 public sealed record Activity : AggregateRoot<ActivityId>
 {
+    private readonly List<Pause> pauses = [];
+    private OneOf<DateTime, None> CurrentPauseStart { get; set; } = new None();
+
     public string Description { get; private set; }
     public ActivityState State { get; private set; } = ActivityState.Created;
+
+    public IEnumerable<Pause> Pauses => pauses;
 
     public Activity(ActivityId id, IEnumerable<DomainEvent> events) : base(id, events)
     {
@@ -20,20 +27,20 @@ public sealed record Activity : AggregateRoot<ActivityId>
     public static Activity Create() =>
         new(ActivityId.CreateUnique(), Array.Empty<DomainEvent>());
 
-    public Result<Activity> Start(string description) =>
+    public Common.Result<Activity> Start(string description) =>
         ApplyDomainEvent(new ActivityStarted(description)).Map(_ => this);
 
-    public Result<Activity> ChangeDescription(string description) =>
+    public Common.Result<Activity> ChangeDescription(string description) =>
         ApplyDomainEvent(new ActivityDescriptionChanged(description)).Map(_ => this);
 
-    public Result<Activity> Pause() => ApplyDomainEvent(new ActivityPaused()).Map(_ => this);
+    public Common.Result<Activity> Pause() => ApplyDomainEvent(new ActivityPaused(DateTime.Now)).Map(_ => this);
 
-    public Result<Activity> Resume() => ApplyDomainEvent(new ActivityResumed()).Map(_ => this);
+    public Common.Result<Activity> Resume() => ApplyDomainEvent(new ActivityResumed(DateTime.Now)).Map(_ => this);
 
-    public Result<Activity> End() => ApplyDomainEvent(new ActivityEnded()).Map(_ => this);
+    public Common.Result<Activity> End() => ApplyDomainEvent(new ActivityEnded()).Map(_ => this);
 
     [UsedImplicitly]
-    internal Result<Unit> Apply(ActivityStarted @event)
+    internal Common.Result<Unit> Apply(ActivityStarted @event)
     {
         switch (State)
         {
@@ -53,19 +60,20 @@ public sealed record Activity : AggregateRoot<ActivityId>
     }
 
     [UsedImplicitly]
-    internal Result<Unit> Apply(ActivityDescriptionChanged @event)
+    internal Common.Result<Unit> Apply(ActivityDescriptionChanged @event)
     {
         Description = @event.Description;
         return Unit.Value;
     }
 
     [UsedImplicitly]
-    internal Result<Unit> Apply(ActivityPaused _)
+    internal Common.Result<Unit> Apply(ActivityPaused @event)
     {
         switch (State)
         {
             case ActivityState.Running:
                 State = ActivityState.Paused;
+                CurrentPauseStart = @event.PausedAt;
                 return Unit.Value;
             case ActivityState.Ended:
                 return new ActivityAlreadyEnded();
@@ -77,7 +85,7 @@ public sealed record Activity : AggregateRoot<ActivityId>
     }
 
     [UsedImplicitly]
-    internal Result<Unit> Apply(ActivityResumed _)
+    internal Common.Result<Unit> Apply(ActivityResumed @event)
     {
         switch (State)
         {
@@ -87,6 +95,8 @@ public sealed record Activity : AggregateRoot<ActivityId>
                 return new ActivityAlreadyEnded();
             case ActivityState.Paused:
                 State = ActivityState.Running;
+                pauses.Add(new Pause(CurrentPauseStart.AsT0, @event.ResumedAt));
+                CurrentPauseStart = new None();
                 return Unit.Value;
             default:
                 throw new ArgumentException(nameof(State));
@@ -94,7 +104,7 @@ public sealed record Activity : AggregateRoot<ActivityId>
     }
 
     [UsedImplicitly]
-    internal Result<Unit> Apply(ActivityEnded _)
+    internal Common.Result<Unit> Apply(ActivityEnded _)
     {
         switch (State)
         {
