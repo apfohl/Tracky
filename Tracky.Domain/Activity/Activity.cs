@@ -1,17 +1,14 @@
 using JetBrains.Annotations;
-using MediatR;
 using Tracky.Domain.Activity.Enums;
-using Tracky.Domain.Activity.Errors;
 using Tracky.Domain.Activity.Events;
-using Tracky.Domain.Activity.ValueObjects;
+using Tracky.Domain.Activity.Validation;
 using Tracky.Domain.Common;
 
 namespace Tracky.Domain.Activity;
 
 public sealed record Activity : AggregateRoot<ActivityId>
 {
-    private string Description { get; set; }
-    private ActivityState State { get; set; } = ActivityState.Created;
+    private Result<ActivityState> State { get; set; } = ActivityState.Created;
 
     public Activity(ActivityId id, IEnumerable<DomainEvent> events) : base(id, events)
     {
@@ -21,93 +18,63 @@ public sealed record Activity : AggregateRoot<ActivityId>
         new(ActivityId.CreateUnique(), Array.Empty<DomainEvent>());
 
     public Result<Activity> Start(string description) =>
-        ApplyDomainEvent(new ActivityStarted(description)).Map(_ => this);
+        State
+            .Bind(ActivityValidation.ValidateNotRunning)
+            .Bind(ActivityValidation.ValidateNotEnded)
+            .Map(_ => (Activity)ApplyDomainEvent(new ActivityStarted(description)));
 
     public Result<Activity> ChangeDescription(string description) =>
-        ApplyDomainEvent(new ActivityDescriptionChanged(description)).Map(_ => this);
+        (Result<Activity>)ApplyDomainEvent(new ActivityDescriptionChanged(description));
 
-    public Result<Activity> Pause() => ApplyDomainEvent(new ActivityPaused(DateTime.Now)).Map(_ => this);
+    public Result<Activity> Pause() =>
+        State
+            .Bind(ActivityValidation.ValidateRunning)
+            .Bind(ActivityValidation.ValidateNotEnded)
+            .Map(_ => (Activity)ApplyDomainEvent(new ActivityPaused(DateTime.Now)));
 
-    public Result<Activity> Resume() => ApplyDomainEvent(new ActivityResumed(DateTime.Now)).Map(_ => this);
+    public Result<Activity> Resume() =>
+        State
+            .Bind(ActivityValidation.ValidatePaused)
+            .Map(_ => (Activity)ApplyDomainEvent(new ActivityResumed(DateTime.Now)));
 
-    public Result<Activity> End() => ApplyDomainEvent(new ActivityEnded()).Map(_ => this);
+    public Result<Activity> End() =>
+        State
+            .Bind(ActivityValidation.ValidateNotEnded)
+            .Map(_ => (Activity)ApplyDomainEvent(new ActivityEnded()));
 
     [UsedImplicitly]
-    internal Result<Unit> Apply(ActivityStarted @event)
+    internal Activity Apply(ActivityStarted @event)
     {
-        switch (State)
-        {
-            case ActivityState.Running:
-                return new ActivityAlreadyStarted();
-            case ActivityState.Ended:
-                return new ActivityAlreadyEnded();
-            case ActivityState.Paused:
-                return new ActivityAlreadyStarted();
-            case ActivityState.Created:
-                Description = @event.Description;
-                State = ActivityState.Running;
-                return Unit.Value;
-            default:
-                throw new ArgumentException(nameof(State));
-        }
+        State = ActivityState.Running;
+
+        return this;
     }
 
     [UsedImplicitly]
-    internal Result<Unit> Apply(ActivityDescriptionChanged @event)
+    internal Activity Apply(ActivityDescriptionChanged @event) =>
+        this;
+
+    [UsedImplicitly]
+    internal Activity Apply(ActivityPaused _)
     {
-        Description = @event.Description;
-        return Unit.Value;
+        State = ActivityState.Paused;
+
+        return this;
     }
 
     [UsedImplicitly]
-    internal Result<Unit> Apply(ActivityPaused @event)
+    internal Activity Apply(ActivityResumed _)
     {
-        switch (State)
-        {
-            case ActivityState.Running:
-                State = ActivityState.Paused;
-                return Unit.Value;
-            case ActivityState.Ended:
-                return new ActivityAlreadyEnded();
-            case ActivityState.Paused:
-                return Unit.Value;
-            default:
-                throw new ArgumentException(nameof(State));
-        }
+        State = ActivityState.Running;
+
+        return this;
     }
 
     [UsedImplicitly]
-    internal Result<Unit> Apply(ActivityResumed @event)
+    internal Activity Apply(ActivityEnded _)
     {
-        switch (State)
-        {
-            case ActivityState.Running:
-                return Unit.Value;
-            case ActivityState.Ended:
-                return new ActivityAlreadyEnded();
-            case ActivityState.Paused:
-                State = ActivityState.Running;
-                return Unit.Value;
-            default:
-                throw new ArgumentException(nameof(State));
-        }
-    }
+        State = ActivityState.Ended;
 
-    [UsedImplicitly]
-    internal Result<Unit> Apply(ActivityEnded _)
-    {
-        switch (State)
-        {
-            case ActivityState.Running:
-                State = ActivityState.Ended;
-                return Unit.Value;
-            case ActivityState.Ended:
-                return Unit.Value;
-            case ActivityState.Paused:
-                State = ActivityState.Ended;
-                return Unit.Value;
-            default:
-                throw new ArgumentException(nameof(State));
-        }
+        return this;
     }
 }

@@ -4,7 +4,6 @@ using Tracky.Application.Activities.ReadModels;
 using Tracky.Application.Persistence;
 using Tracky.Application.Persistence.Events;
 using Tracky.Domain.Activity;
-using Tracky.Domain.Activity.ValueObjects;
 using Tracky.Infrastructure.EventStore;
 using Tracky.Infrastructure.Repositories;
 using Tracky.Infrastructure.UnitOfWork;

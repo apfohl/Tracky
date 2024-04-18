@@ -1,5 +1,5 @@
 using Tracky.Application.Common;
-using Tracky.Domain.Activity.ValueObjects;
+using Tracky.Domain.Activity;
 
 namespace Tracky.Application.Activities.Commands.StartActivity;
 

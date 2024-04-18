@@ -1,8 +1,6 @@
 using Tracky.Domain.Activity;
-using Tracky.Domain.Activity.Enums;
 using Tracky.Domain.Activity.Errors;
 using Tracky.Domain.Activity.Events;
-using Tracky.Domain.Activity.ValueObjects;
 using Tracky.Domain.Common;
 
 namespace Tracky.DomainTests;
@@ -104,7 +102,7 @@ public static class ActivityTests
     }
 
     [Test]
-    public static void Resume_returns_error_when_activity_has_already_ended()
+    public static void Resume_returns_error_when_activity_is_not_paused()
     {
         var activity = Activity.Create();
         activity.Start("Test Description").Switch(_ => { }, error => Assert.Fail(error.ToString()));
@@ -112,11 +110,11 @@ public static class ActivityTests
 
         activity.Resume().Switch(
             _ => Assert.Fail("Activity should not be resumed!"),
-            error => error.Should().BeOfType<ActivityAlreadyEnded>());
+            error => error.Should().BeOfType<ActivityIsNotPaused>());
     }
 
     [Test]
-    public static void Pause_returns_error_when_activity_has_already_ended()
+    public static void Pause_returns_error_when_activity_is_not_running()
     {
         var activity = Activity.Create();
         activity.Start("Test Description").Switch(_ => { }, error => Assert.Fail(error.ToString()));
@@ -124,6 +122,6 @@ public static class ActivityTests
 
         activity.Pause().Switch(
             _ => Assert.Fail("Activity should not be paused!"),
-            error => error.Should().BeOfType<ActivityAlreadyEnded>());
+            error => error.Should().BeOfType<ActivityIsNotRunning>());
     }
 }

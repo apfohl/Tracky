@@ -1,5 +1,3 @@
-using MediatR;
-
 namespace Tracky.Domain.Common;
 
 public abstract record AggregateRoot<TId> where TId : Identity
@@ -30,7 +28,9 @@ public abstract record AggregateRoot<TId> where TId : Identity
             })
             .MapAsync(_ => Id);
 
-    protected Result<Unit> ApplyDomainEvent(DomainEvent domainEvent) =>
-        ((Result<Unit>)((dynamic)this).Apply((dynamic)domainEvent))
-        .Tap(_ => uncommittedEvents.Add(domainEvent));
+    protected AggregateRoot<TId> ApplyDomainEvent(DomainEvent domainEvent)
+    {
+        uncommittedEvents.Add(domainEvent);
+        return ((dynamic)this).Apply((dynamic)domainEvent);
+    }
 }

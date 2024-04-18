@@ -1,7 +1,6 @@
 using Tracky.Application.Common;
 using Tracky.Application.Persistence.Events;
 using Tracky.Domain.Activity;
-using Tracky.Domain.Activity.ValueObjects;
 using Tracky.Domain.Common;
 
 namespace Tracky.Application.Activities.Commands.StartActivity;

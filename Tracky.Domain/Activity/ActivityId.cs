@@ -1,6 +1,6 @@
 using Tracky.Domain.Common;
 
-namespace Tracky.Domain.Activity.ValueObjects;
+namespace Tracky.Domain.Activity;
 
 public sealed record ActivityId : Identity
 {
