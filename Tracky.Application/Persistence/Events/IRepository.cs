@@ -4,7 +4,7 @@ namespace Tracky.Application.Persistence.Events;
 
 public interface IRepository<TAggregate, TAggregateId>
     where TAggregate : AggregateRoot<TAggregateId>
-    where TAggregateId : AggregateRootId
+    where TAggregateId : Identity
 {
     Task<Result<TAggregate>> GetByIdAsync(TAggregateId id);
 

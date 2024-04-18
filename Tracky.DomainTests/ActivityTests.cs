@@ -17,9 +17,6 @@ public static class ActivityTests
 
         activity.Start(description).Switch(_ => { }, error => Assert.Fail(error.ToString()));
 
-        activity.Description.Should().Be(description);
-        activity.State.Should().Be(ActivityState.Running);
-
         return activity.Commit((version, events) =>
         {
             version.Should().Be(-1);
@@ -45,8 +42,6 @@ public static class ActivityTests
         var activity = new Activity(id, events);
 
         activity.Id.Should().Be(id);
-        activity.Description.Should().Be("New Description");
-        activity.State.Should().Be(ActivityState.Running);
 
         return activity.Commit((v, ev) =>
         {
@@ -67,8 +62,6 @@ public static class ActivityTests
 
         activity.ChangeDescription("New Description").Switch(_ => { }, error => Assert.Fail(error.ToString()));
 
-        activity.Description.Should().Be("New Description");
-
         return activity.Commit((version, events) =>
         {
             version.Should().Be(-1);
@@ -88,9 +81,7 @@ public static class ActivityTests
         var activity = Activity.Create();
         activity.Start("Test Description").Switch(_ => { }, error => Assert.Fail(error.ToString()));
 
-        activity.Pause().Switch(_ => { }, error => Assert.Fail(error.ToString()));
-
-        activity.State.Should().Be(ActivityState.Paused);
+        activity.Pause().Switch(_ => Assert.Pass(), error => Assert.Fail(error.ToString()));
     }
 
     [Test]
@@ -99,10 +90,8 @@ public static class ActivityTests
         var activity = Activity.Create();
         activity.Start("Test Description").Switch(_ => { }, error => Assert.Fail(error.ToString()));
 
-        activity.Pause().Switch(_ => { }, error => Assert.Fail(error.ToString()));
-        activity.Resume().Switch(_ => { }, error => Assert.Fail(error.ToString()));
-
-        activity.State.Should().Be(ActivityState.Running);
+        activity.Pause().Switch(_ => Assert.Pass(), error => Assert.Fail(error.ToString()));
+        activity.Resume().Switch(_ => Assert.Pass(), error => Assert.Fail(error.ToString()));
     }
 
     [Test]
@@ -111,9 +100,7 @@ public static class ActivityTests
         var activity = Activity.Create();
         activity.Start("Test Description").Switch(_ => { }, error => Assert.Fail(error.ToString()));
 
-        activity.End().Switch(_ => { }, error => Assert.Fail(error.ToString()));
-
-        activity.State.Should().Be(ActivityState.Ended);
+        activity.End().Switch(_ => Assert.Pass(), error => Assert.Fail(error.ToString()));
     }
 
     [Test]

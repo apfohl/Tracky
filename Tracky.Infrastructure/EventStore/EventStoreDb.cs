@@ -8,7 +8,7 @@ namespace Tracky.Infrastructure.EventStore;
 public sealed class EventStoreDb(EventStoreClient eventStoreClient) : IEventStore
 {
     public Task<Result<IEnumerable<DomainEvent>>> ReadEventsAsync<TAggregateId>(TAggregateId aggregateId)
-        where TAggregateId : AggregateRootId =>
+        where TAggregateId : Identity =>
         eventStoreClient
             .ReadStreamAsync(Direction.Forwards, aggregateId.AsString(), StreamPosition.Start)
             .Select(@event => DeserializeEvent(@event.Event.Data, @event.Event.EventType))
@@ -19,7 +19,7 @@ public sealed class EventStoreDb(EventStoreClient eventStoreClient) : IEventStor
             .MapAsync(list => list.AsEnumerable());
 
     public async Task<Result<long>> AppendEventsAsync<TAggregateId>(TAggregateId id, long version,
-        IEnumerable<DomainEvent> events) where TAggregateId : AggregateRootId
+        IEnumerable<DomainEvent> events) where TAggregateId : Identity
     {
         try
         {

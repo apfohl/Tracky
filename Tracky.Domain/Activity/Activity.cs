@@ -10,8 +10,8 @@ namespace Tracky.Domain.Activity;
 
 public sealed record Activity : AggregateRoot<ActivityId>
 {
-    public string Description { get; private set; }
-    public ActivityState State { get; private set; } = ActivityState.Created;
+    private string Description { get; set; }
+    private ActivityState State { get; set; } = ActivityState.Created;
 
     public Activity(ActivityId id, IEnumerable<DomainEvent> events) : base(id, events)
     {

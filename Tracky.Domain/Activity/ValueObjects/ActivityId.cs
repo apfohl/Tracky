@@ -2,7 +2,7 @@ using Tracky.Domain.Common;
 
 namespace Tracky.Domain.Activity.ValueObjects;
 
-public sealed record ActivityId : AggregateRootId
+public sealed record ActivityId : Identity
 {
     private ActivityId(Guid Value) : base(Value)
     {

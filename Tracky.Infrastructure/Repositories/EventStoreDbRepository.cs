@@ -9,7 +9,7 @@ namespace Tracky.Infrastructure.Repositories;
 public sealed class EventStoreDbRepository<TAggregate, TAggregateId>(IEventStore eventStore, IPublisher publisher)
     : IRepository<TAggregate, TAggregateId>
     where TAggregate : AggregateRoot<TAggregateId>
-    where TAggregateId : AggregateRootId
+    where TAggregateId : Identity
 {
     public async Task<Result<TAggregate>> GetByIdAsync(TAggregateId id) =>
         (await eventStore.ReadEventsAsync(id))

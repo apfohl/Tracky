@@ -2,12 +2,14 @@ using MediatR;
 
 namespace Tracky.Domain.Common;
 
-public abstract record AggregateRoot<TId> : Entity<TId> where TId : AggregateRootId
+public abstract record AggregateRoot<TId> where TId : Identity
 {
     public const long InitialVersion = -1;
 
     private readonly List<DomainEvent> uncommittedEvents = [];
     private long version = InitialVersion;
+
+    public TId Id { get; }
 
     protected AggregateRoot(TId id, IEnumerable<DomainEvent> events)
     {
