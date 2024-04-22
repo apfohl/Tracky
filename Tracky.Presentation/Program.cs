@@ -16,37 +16,43 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services
     .AddPresentation()
     .AddApplication()
-    .AddInfrastructure();
+    .AddInfrastructure()
+    .AddEndpointsApiExplorer()
+    .AddSwaggerGen();
 
 var app = builder.Build();
 
-if (!app.Environment.IsDevelopment())
+if (app.Environment.IsDevelopment())
 {
-    app.UseExceptionHandler("/Home/Error");
-    app.UseHsts();
+    app.UseSwagger();
+    app.UseSwaggerUI();
 }
 
 app.MapGet("/activities", async (ISender sender) =>
         (await sender.Send(new ListActivitiesQuery()))
         .Match(Results.Ok, Results.NotFound))
-    .WithName("GetActivities");
+    .WithName("GetActivities")
+    .WithOpenApi();
 
 app.MapGet("/activities/{id:guid}", async (ISender sender, Guid id) =>
         (await sender.Send(new ShowActivityQuery(id)))
         .Match(Results.Ok, Results.NotFound))
-    .WithName("GetActivityById");
+    .WithName("GetActivityById")
+    .WithOpenApi();
 
 app.MapPost("/activities", async (ISender sender, StartActivityRequestData requestData) =>
         (await sender.Send(new StartActivityCommand(requestData.Description)))
         .Match(
             activityId => Results.CreatedAtRoute("GetActivityById", new { id = activityId.Value }, activityId.Value),
             _ => Results.StatusCode(500)))
-    .WithName("ListActivities");
+    .WithName("ListActivities")
+    .WithOpenApi();
 
 app.MapPut("/activities/{id:guid}/pause", async (ISender sender, Guid id) =>
         (await sender.Send(new PauseActivityCommand(id)))
         .Match(_ => Results.Ok(), Results.NotFound))
-    .WithName("PauseActivity");
+    .WithName("PauseActivity")
+    .WithOpenApi();
 
 app.MapPut("/activities/{id:guid}/resume", async (ISender sender, Guid id) =>
         (await sender.Send(new ResumeActivityCommand(id)))
@@ -56,11 +62,13 @@ app.MapPut("/activities/{id:guid}/resume", async (ISender sender, Guid id) =>
 app.MapPut("/activities/{id:guid}/end", async (ISender sender, Guid id) =>
         (await sender.Send(new EndActivityCommand(id)))
         .Match(_ => Results.Ok(), Results.NotFound))
-    .WithName("EndActivity");
+    .WithName("EndActivity")
+    .WithOpenApi();
 
 app.MapPut("/activities/{id:guid}", async (ISender sender, Guid id, ChangeDescriptionRequestData requestData) =>
         (await sender.Send(new ChangeDescriptionCommand(id, requestData.Description)))
         .Match(_ => Results.Ok(), Results.NotFound))
-    .WithName("ChangeDescription");
+    .WithName("ChangeDescription")
+    .WithOpenApi();
 
 app.Run();
